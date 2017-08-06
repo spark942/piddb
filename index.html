@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>PokeIdle Database</title>
+		<meta charset="utf-8">
+		<meta name="author" content="Ape Apps, William Kuoch">
+
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+
+		<!-- Optional theme -->
+		<link rel="stylesheet" href="css/bootstrap-theme.min.css">
+		<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Lato|Montserrat" />
+		<link rel="stylesheet" type="text/css" href="datatables.min.css"/>
+		<link rel="stylesheet" type="text/css" href="css/jquery-ui.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/jquery.dataTables.yadcf.css" />
+		<!-- Change hash when file updated (style.css and script.js at the bottom) -->
+		<link rel="stylesheet" type="text/css" href="style.css?v=2c1df5df" />
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+		<script type="text/javascript" src="js/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="js/datatables.min.js"></script>
+		<script type="text/javascript" src="js/dataTables.pageResize.min.js"></script>
+		<script type="text/javascript" src="js/jquery.dataTables.yadcf.js"></script>
+
+	</head>
+	<body>
+		 <div id="wrapper">
+
+			<!-- Sidebar -->
+			<div id="sidebar-wrapper">
+				<ul class="sidebar-nav">
+					<li class="sidebar-brand">
+						<a href="#" id="page-title">
+							PokeIdle Database
+						</a>
+					</li>
+					<li>
+						<a href="https://www.apewebapps.com/my-colony/" target="_blank">PokeIdle Database</a>
+					</li>
+					<li class="divider-vertical">
+					</li>
+				</ul>
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="form-group">
+								<input id="searchdatalist" type="text" class="form-control ptsets" placeholder="Type something: Pika">
+							</div>
+						</div>
+					</div>
+				</div>
+				<ul class="sidebar-nav">
+					<!-- <li class="sidebar-brand">
+						<a href="#">
+							Filters
+						</a>
+					</li> -->
+					<li>
+							<button type="button" id="clearf" class="btn btn-default">Clear Filters</button>
+					</li>
+					<!-- <li class="disabled">
+						Preset Orderings<br>
+						<ul>
+							<li>Stage, Alphabetical</li>
+							<li>Alphabetical</li>
+							<li>Type</li>
+						</ul>
+					</li> -->
+					<li>
+						Show / Hide (Next update)<br>
+						<!-- <ul>
+							<li><a class="tofilter" href="#">All</a></li>
+							<li><a class="tofilter" href="#">Building</a></li>
+							<li><a class="tofilter" href="#">Pavement</a></li>
+							<li><a class="tofilter" href="#">Vehicle</a></li>
+							<li><a class="tofilter" href="#">Technology</a></li>
+						</ul> -->
+						
+					</li>
+					<li>
+						
+					</li>
+					<li>
+						<a href="#" id="version-number">Data from version</a>
+					</li>
+					<li>
+						<a href="#" id="version-number">Reference version 0.3.0</a>
+					</li>
+				</ul>
+			</div>
+			<!-- /#sidebar-wrapper -->
+
+			<!-- Page Content -->
+			<div id="page-content-wrapper">
+				<div id="item-description" class="container-fluid">
+				</div>
+				<div class="container-fluid">
+					<div id="loading-overlay" class="jumbotron">
+						<h1>Loading References...</h1>
+					</div>
+					<div id="tablecontainer" class="row">
+						<div class="col-lg-12">
+							<table id="pokemonspercity" class="display nowrap" width="100%">
+							<thead>
+								<tr>
+									<th>#</th>			<!-- 0 -->
+									<th>Pokemon</th>	<!-- 1 -->
+									<th>Region</th>		<!-- 2 -->
+									<th>Route</th>		<!-- 3 -->
+									<th>Min Lv</th>	<!-- 4 -->
+									<th>Max Lv</th>	<!-- 5 -->
+									<th>Min Exp</th>	<!-- 6 -->
+									<th>Max Exp</th>	<!-- 7 -->
+									<th>Min Team Exp</th>	<!-- 6 -->
+									<th>Max Team Exp</th>	<!-- 7 -->
+								</tr>
+							</thead>
+							<tbody></tbody>
+							<tfoot>
+								<tr>
+									<th>#</th>			<!-- 0 -->
+									<th></th>	<!-- 1 -->
+									<th></th>		<!-- 2 -->
+									<th></th>		<!-- 3 -->
+									<th>Min Lv</th>	<!-- 4 -->
+									<th>Max Lv</th>	<!-- 5 -->
+									<th>Min Exp</th>	<!-- 6 -->
+									<th>Max Exp</th>	<!-- 7 -->
+									<th>Min Team Exp</th>	<!-- 6 -->
+									<th>Max Team Exp</th>	<!-- 7 -->
+								</tr>
+							</tfoot>
+						</table>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /#page-content-wrapper -->
+
+		</div>
+		<script src="db.js?v=2c1df5df"></script>
+		<script src="evolutions.js?v=2c1df5df"></script>
+		<script src="routes.js?v=2c1df5df"></script>
+		<script src="script.js?v=2c1df5df"></script>
+	</body>
+</html>
