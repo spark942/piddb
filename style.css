@@ -278,3 +278,8 @@ a.tofilter {
 .yadcf-filter {
 	padding: 0;
 }
+
+
+.num {
+    text-align: right;
+}
