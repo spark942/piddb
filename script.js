@@ -70,6 +70,12 @@ var formatPokemonArray = function() {
       Pokemons[p_name].evolution = EVOLUTIONS[p_name].to;
       Pokemons[p_name].evollevel = EVOLUTIONS[p_name].level;
     };
+    for (pokefrom in EVOLUTIONS) {
+      if (EVOLUTIONS[pokefrom].to == p_name) {
+        Pokemons[p_name].evolfrom = pokefrom;
+        Pokemons[p_name].evolfromlv = EVOLUTIONS[pokefrom].level;
+      }
+    }
 
     /* Routes */
     // see formatPokemonCity()
@@ -353,7 +359,7 @@ $(document).ready(function() {
         name: "SPD", data: "speedlv100", className: 'num'
       },
       { /* 6 (Col 7) */
-        name: "Base Exp", data: "bexp", className: 'num', render: $.fn.dataTable.render.number( ',', '.', 0, '', 'EXP')
+        name: "Base Exp", data: "bexp", className: 'num', render: $.fn.dataTable.render.number( ',', '.', 0, '', ' EXP')
       },
       { /* 7 (Col 8) */
         name: "Catch Rate", data: "catch", className: 'num'
@@ -421,6 +427,24 @@ $(document).ready(function() {
               minimumFractionDigits: 1,
               maximumFractionDigits: 2
           }) + "%";
+        }
+      },
+      {
+        "aTargets": [9],
+        "mData": "evolution",
+        "mRender": function ( data, type, full ) {
+
+          if (data) {
+            return data + ' ('+full.evollevel+')';
+          } else {
+            if (full.hasOwnProperty('evolfrom')) {
+              return '<span class="evolfrom">from</span> ' + full.evolfrom + ''+ ' ('+full.evolfromlv+')';
+            } else {
+              return '';
+            }
+            
+          }
+          
         }
       },
       {
