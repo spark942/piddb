@@ -365,7 +365,7 @@ $(document).ready(function() {
         name: "Catch Rate", data: "catch", className: 'num'
       },
       { /* 8 (Col 9) */
-        name: "Growth Rate", data: "growth"
+        name: "Growth Rate", data: "growth", className: 'tsmall'
       },
       { /* 9 (Col 10) */
         name: "Evolution", data: "evolution", "defaultContent": ""
@@ -435,10 +435,10 @@ $(document).ready(function() {
         "mRender": function ( data, type, full ) {
 
           if (data) {
-            return data + ' ('+full.evollevel+')';
+            return data + ' <span class="tsmall">('+full.evollevel+')</span>';
           } else {
             if (full.hasOwnProperty('evolfrom')) {
-              return '<span class="evolfrom">from</span> ' + full.evolfrom + ''+ ' ('+full.evolfromlv+')';
+              return '<span class="evolfrom">from</span> ' + full.evolfrom + ''+ ' <span class="tsmall">('+full.evolfromlv+')</span>';
             } else {
               return '';
             }
@@ -457,7 +457,7 @@ $(document).ready(function() {
             for (Region in data){
               if (i > 0)
                 text += ', ';
-              text += '<span>'+Region+' ('+ data[Region].length +')</span>';
+              text += '<span>'+Region+' <span class="tsmall">('+ data[Region].length +')</span></span>';
               i++;
             };
           }

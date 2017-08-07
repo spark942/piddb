@@ -288,6 +288,9 @@ a.tofilter {
 .num {
     text-align: right;
 }
+.tsmall {
+	font-size: 10px;
+}
 
 /* display hide tables */
 
