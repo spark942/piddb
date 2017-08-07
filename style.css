@@ -54,6 +54,7 @@ html,body { height: 100%; margin: 0px; padding: 0px; }
 #page-content-wrapper .container-fluid #tablecontainer,
 #page-content-wrapper .container-fluid #tablecontainer > div {
 	height: 100%;
+	position: relative;
 }
 #wrapper.toggled #page-content-wrapper {
 	position: absolute;
@@ -120,6 +121,10 @@ html,body { height: 100%; margin: 0px; padding: 0px; }
 
 .sidebar-nav > .divider-vertical a {
 	height: 30px;
+}
+.sidebar-nav > li > a.showtable.curtable {
+	background-color: white;
+	color: black;
 }
 
 #menu-toggle {
@@ -282,4 +287,19 @@ a.tofilter {
 
 .num {
     text-align: right;
+}
+
+/* display hide tables */
+
+.poketable {
+	display: none;
+	/*background-color: orange;*/
+	background-color: white;
+}
+.poketable.curtable {
+	display: inherit;
+}
+
+.pokedex-img {
+	height: 30px;
 }

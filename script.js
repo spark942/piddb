@@ -5,7 +5,13 @@ EXP_TABLE["Medium Slow"] = [1, 2, 9, 57, 96, 135, 179, 236, 314, 419, 560, 742, 
 EXP_TABLE["Medium Fast"] = [1, 2, 8, 27, 64, 125, 216, 343, 512, 729, 1000, 1331, 1728, 2197, 2744, 3375, 4096, 4913, 5832, 6859, 8000, 9261, 10648, 12167, 13824, 15625, 17576, 19683, 21952, 24389, 27000, 29791, 32768, 35937, 39304, 42875, 46656, 50653, 54872, 59319, 64000, 68921, 74088, 79507, 85184, 91125, 97336, 103823, 110592, 117649, 125000, 132651, 140608, 148877, 157464, 166375, 175616, 185193, 195112, 205379, 216000, 226981, 238328, 250047, 262144, 274625, 287496, 300763, 314432, 328509, 343000, 357911, 373248, 389017, 405224, 421875, 438976, 456533, 474552, 493039, 512000, 531441, 551368, 571787, 592704, 614125, 636056, 658503, 681472, 704969, 729000, 753571, 778688, 804357, 830584, 857375, 884736, 912673, 941192, 970299, 999999999999999999]
 EXP_TABLE["Fast"] = [1, 2, 6, 21, 51, 100, 172, 274, 409, 583, 800, 1064, 1382, 1757, 2195, 2700, 3276, 3930, 4665, 5487, 6400, 7408, 8518, 9733, 11059, 12500, 14060, 15746, 17561, 19511, 21600, 23832, 26214, 28749, 31443, 34300, 37324, 40522, 43897, 47455, 51200, 55136, 59270, 63605, 68147, 72900, 77868, 83058, 88473, 94119, 100000, 106120, 112486, 119101, 125971, 133100, 140492, 148154, 156089, 164303, 172800, 181584, 190662, 200037, 209715, 219700, 229996, 240610, 251545, 262807, 274400, 286328, 298598, 311213, 324179, 337500, 351180, 365226, 379641, 394431, 409600, 425152, 441094, 457429, 474163, 491300, 508844, 526802, 545177, 563975, 583200, 602856, 622950, 643485, 664467, 685900, 707788, 730138, 752953, 776239, 999999999999999999]
 
+const statValue = (raw, level) => {
+  level = level || 1;
+  return Math.floor((((raw + 50) * level) / (150)))
+}
+
 var Pokemons = {};
+var PokemonPokedex = [];
 var PokemonsPerCity = [];
 
 var formatPokemonArray = function() {
@@ -22,19 +28,49 @@ var formatPokemonArray = function() {
     var p_type1  = POKEDEX[pdt].stats[0]["types"][0];
     var p_type2  = POKEDEX[pdt].stats[0]["types"][1];
     var p_bexp   = POKEDEX[pdt].exp[0]["base exp"];
+    var p_image  = POKEDEX[pdt].images.normal.front;
+    var p_id     = parseInt(pdt) +1;
     Pokemons[p_name] = {
-      catch   : p_catch,
-      growth  : p_growth,
-      p_hp    : p_hp,
-      atk     : p_atk,
-      def     : p_def,
-      spatk   : p_spatk,
-      spdef   : p_spdef,
-      speed   : p_speed,
-      type1   : p_type1,
-      type2   : p_type2 || '',
-      bexp    : p_bexp,
+      name      : p_name,
+      catch     : p_catch,
+      growth    : p_growth,
+      p_hp      : p_hp,
+      atk       : p_atk,
+      atklv1    : statValue(p_atk),
+      atklv100  : statValue(p_atk,100),
+      def       : p_def,
+      deflv1    : statValue(p_def),
+      deflv100  : statValue(p_def,100),
+      spatk     : p_spatk,
+      spatklv1  : statValue(p_spatk),
+      spatklv100: statValue(p_spatk,100),
+      spdef     : p_spdef,
+      spdeflv1  : statValue(p_spdef),
+      spdeflv100: statValue(p_spdef,100),
+      speed     : p_speed,
+      speedlv1  : Math.floor(1000 / (500 + statValue(p_speed)) * 800)/1000,
+      speedlv100: Math.floor(1000 / (500 + statValue(p_speed, 100)) * 800)/1000,
+      type1     : p_type1,
+      type2     : p_type2 || '',
+      bexp      : p_bexp,
+      imgf      : p_image,
+      id        : p_id
     };
+
+    Pokemons[p_name].hardcappedspeedlv1   = (Pokemons[p_name].speedlv1 > 0.3 ? Pokemons[p_name].speedlv1 : 0.3);
+    Pokemons[p_name].hardcappedspeedlv100 = (Pokemons[p_name].speedlv100 > 0.3 ? Pokemons[p_name].speedlv100 : 0.3);
+    Pokemons[p_name].powerlv1   = (Pokemons[p_name].atklv1*(1/Pokemons[p_name].hardcappedspeedlv1))*0.3 + Pokemons[p_name].deflv1;
+    Pokemons[p_name].powerlv100 = (Pokemons[p_name].atklv100*(1/Pokemons[p_name].hardcappedspeedlv100))*0.3 + Pokemons[p_name].deflv100*0.7;
+
+    /* Evolution */
+    if (EVOLUTIONS.hasOwnProperty(p_name)) {
+      Pokemons[p_name].evolution = EVOLUTIONS[p_name].to;
+      Pokemons[p_name].evollevel = EVOLUTIONS[p_name].level;
+    };
+
+    /* Routes */
+    // see formatPokemonCity()
+
     //$("#pokemonspercity").append(p_name + "<br>");
   }
 };
@@ -60,7 +96,28 @@ var formatPokemonCity = function(name, region, routename, min, max) {
     region : region,
     route  : routename,
   };
+
+  /* Add route to pokedex pokemon */
+  if (!Pokemons[name].hasOwnProperty('routes')) {
+    Pokemons[name].routes = {};
+  }
+  if (!Pokemons[name].routes.hasOwnProperty(region)) {
+    Pokemons[name].routes[region] = [];
+  }
+  Pokemons[name].routes[region].push({
+    routename: routename,
+    lvmin    : min,
+    lvmax    : max
+  });
+
+
   return PokemonCity;
+};
+
+var PokemonsToPokedex = function() {
+  for (poke in Pokemons) {
+    PokemonPokedex.push(Pokemons[poke]);
+  }
 };
 
 var buildPokeByCityData = function() {
@@ -139,6 +196,9 @@ var filterableColumnNames = [
     "Region",
     "Route"];
 $(document).ready(function() {
+  /* *********************** *
+   *  POKEMON PER CITY
+   * *********************** */
   $('#pokemonspercity').DataTable({
     dom: '<"top">rt<"bottom"ip><"clear">',
     hideEmptyCols: true,
@@ -203,6 +263,7 @@ $(document).ready(function() {
         setSearchVal(decodeURI(searchObj['search']));
         this.api().search(decodeURI(searchObj['search'])).draw();
       }
+      $.fn.dataTable.tables( {visible: true, api: true} ).columns.adjust();
     }
   });
 
@@ -256,6 +317,157 @@ $(document).ready(function() {
     updateURL('search', $(this).val());
   });
 
+  /* *********************** *
+   *  POKEDEX
+   * *********************** */
+  PokemonsToPokedex()
+  $('#pokedex').DataTable({
+    dom: '<"top">rt<"bottom"ip><"clear">',
+    hideEmptyCols: true,
+    lengthChange: true,
+    paging: true,
+    pageResize: true,
+    scrollX: true,
+    fixedColumns: {
+      leftColumns: 1,
+    },
+    data: PokemonPokedex,
+    columns: [
+      { /* 0 (Col 1) */
+        name: "#", data: "id" },
+      { /* 1 (Col 2) */
+        name: "Pokemon", data: "name" },
+      { /* 2 (Col 3) */
+        name: "Type", data: "type1"
+      },
+      { /* 3 (Col 4) */
+        name: "ATK", data: "atklv100", className: 'num'
+      },
+      { /* 4 (Col 5) */
+        name: "DEF", data: "deflv100", className: 'num'
+      },
+      { /* 5 (Col 6) */
+        name: "SPD", data: "speedlv100", className: 'num'
+      },
+      { /* 6 (Col 7) */
+        name: "Base Exp", data: "bexp", className: 'num', render: $.fn.dataTable.render.number( ',', '.', 0, '', 'EXP')
+      },
+      { /* 7 (Col 8) */
+        name: "Catch Rate", data: "catch", className: 'num'
+      },
+      { /* 8 (Col 9) */
+        name: "Growth Rate", data: "growth"
+      },
+      { /* 9 (Col 10) */
+        name: "Evolution", data: "evolution", "defaultContent": ""
+      },
+      { /* 10 (Col 11) */
+        name: "Routes", data: "routes", "defaultContent": ""
+      },
+      { /* 11 (Col 12) */
+        name: "Power", data: "powerlv100", "defaultContent": ""
+      }
+    ], 
+    order: [[ 0, 'asc' ]],
+    aoColumnDefs: [
+      {
+        "aTargets": [3],
+        "mData": "atklv100",
+        "mRender": function ( data, type, full ) {
+          return data.toLocaleString('en-US', {
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0
+          });
+        }
+      },
+      {
+        "aTargets": [4],
+        "mData": "deflv100",
+        "mRender": function ( data, type, full ) {
+          return data.toLocaleString('en-US', {
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0
+          });
+        }
+      },
+      {
+        "aTargets": [5],
+        "mData": "speedlv100",
+        "mRender": function ( data, type, full ) {
+          return (data > 0.3 ? data : 0.3).toLocaleString('en-US', {
+              minimumFractionDigits: 1,
+              maximumFractionDigits: 3
+          });
+        }
+      },
+      {
+        "aTargets": [7],
+        "mData": "catch",
+        "mRender": function ( data, type, full ) {
+          return (parseInt(data)/3).toLocaleString('en-US', {
+              minimumFractionDigits: 1,
+              maximumFractionDigits: 2
+          }) + "%";
+        }
+      },
+      {
+        "aTargets": [10],
+        "mData": "routes",
+        "mRender": function ( data, type, full ) {
+          var text = '';
+          if (data && typeof data === 'object') {
+            var i = 0;
+            for (Region in data){
+              if (i > 0)
+                text += ', ';
+              text += '<span>'+Region+' ('+ data[Region].length +')</span>';
+              i++;
+            };
+          }
+          return text;
+        }
+      },
+      {
+        "aTargets": [11],
+        "mData": "powerlv100",
+        "mRender": function ( data, type, full ) {
+          return (parseInt(data)/3).toLocaleString('en-US', {
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 1
+          }) + "";
+        }
+      },
+      /*{ 
+        "sType": "numeric", 
+        "sClass": "currency",
+        "defaultContent": '',
+        "aTargets": [4, 5, 6, 7, 8, 9]
+      }*/
+    ],
+    initComplete: function(settings, json) {
+      /* Show the table after everything is loaded*/
+      $.fn.dataTable.tables( {visible: true, api: true} ).columns.adjust();
+    }
+  });
+
+  var filterableColumnNamesPD = [
+    "Pokemon",
+    "Region",
+    "Route"];
+  oTablePD = $('#pokedex').DataTable(); 
+  yadcf.init(oTablePD, [/*
+    {column_number : 0 },*//*
+    {column_number : 1, filter_type: 'select', filter_default_label: 'All Pokemon', filter_reset_button_text: false},
+    {column_number : 2, filter_type: 'select', filter_default_label: 'All Region', filter_reset_button_text: false},*/
+    {column_number : 9, filter_type: 'select', filter_default_label: 'Pokémons', filter_reset_button_text: false}
+      ], {filters_position: "footer", filters_tr_index: 2});
+
+
+
+  /* *********************** *
+   *  GENERAL
+   * *********************** */
+
   $(document).on('click', 'a.tofilter', function() { 
     var searchval = $(this).text();
     if (searchval == 'All')
@@ -276,6 +488,27 @@ $(document).ready(function() {
     oTable.search($(this).val()).draw();
   });
 
-  
+
+
+  var curTable = 'pokedex';
+
+  $(document).on('click', 'a.showtable', function() { 
+    var showtable = $(this).attr('id').replace("menu", "");;
+    // remove selected menu class
+    $(".showtable").removeClass("curtable");
+    // remove current table class 
+    $(".poketable").removeClass("curtable");
+
+    // show selected menu
+    $("#menu"+showtable).addClass( "curtable");
+    // display current table
+    $("#tc-"+showtable).addClass( "curtable");
+    $.fn.dataTable.tables( {visible: true, api: true} ).columns.adjust();
+    $("table.pokemonspercity").resize();
+    $("table.pokedex").resize();
+  });
+  // load table from url
+  // if no table, load default
+  //$( "#menupokedex" ).trigger( "click" );
 });
 

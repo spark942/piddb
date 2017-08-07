@@ -3,7 +3,7 @@
 	<head>
 		<title>PokeIdle Database</title>
 		<meta charset="utf-8">
-		<meta name="author" content="Ape Apps, William Kuoch">
+		<meta name="author" content="PokeIdle, William Kuoch">
 
 		<!-- Latest compiled and minified CSS -->
 		<link rel="stylesheet" href="css/bootstrap.min.css">
@@ -35,13 +35,13 @@
 							PokeIdle Database
 						</a>
 					</li>
-					<li>
+					<!-- <li>
 						<a href="https://spark942.github.io/piddb/" target="_blank">PokeIdle Database</a>
-					</li>
+					</li> -->
 					<li class="divider-vertical">
 					</li>
 				</ul>
-				<div class="container-fluid">
+				<!-- <div class="container-fluid">
 					<div class="row">
 						<div class="col-sm-12">
 							<div class="form-group">
@@ -49,16 +49,13 @@
 							</div>
 						</div>
 					</div>
-				</div>
+				</div> -->
 				<ul class="sidebar-nav">
 					<!-- <li class="sidebar-brand">
 						<a href="#">
 							Filters
 						</a>
 					</li> -->
-					<li>
-							<button type="button" id="clearf" class="btn btn-default">Clear Filters</button>
-					</li>
 					<!-- <li class="disabled">
 						Preset Orderings<br>
 						<ul>
@@ -68,24 +65,23 @@
 						</ul>
 					</li> -->
 					<li>
-						Show / Hide (Next update)<br>
-						<!-- <ul>
-							<li><a class="tofilter" href="#">All</a></li>
-							<li><a class="tofilter" href="#">Building</a></li>
-							<li><a class="tofilter" href="#">Pavement</a></li>
-							<li><a class="tofilter" href="#">Vehicle</a></li>
-							<li><a class="tofilter" href="#">Technology</a></li>
-						</ul> -->
-						
+						<a href="#" class="showtable" id="menupokedex">Pok&eacute;dex</a>
 					</li>
 					<li>
-						
+						<a href="#" class="showtable" id="menupokemap">Pok&eacute;map</a>
 					</li>
 					<li>
-						<a href="#" id="version-number">Data from version</a>
+						<a href="#" class="showtable" id="menupokemonspercity">Pok&eacute;mon per Route</a>
 					</li>
+				</ul>
+				<ul class="sidebar-nav">
+					<!-- <li class="sidebar-brand">
+						<a href="#">
+							Filters
+						</a>
+					</li> -->
 					<li>
-						<a href="#" id="version-number">Reference version 0.3.0</a>
+							<button type="button" id="clearf" class="btn btn-default">Clear Filters</button>
 					</li>
 				</ul>
 			</div>
@@ -100,38 +96,85 @@
 						<h1>Loading References...</h1>
 					</div>
 					<div id="tablecontainer" class="row">
-						<div class="col-lg-12">
+						<div id="tc-default" class="col-lg-12 curtable poketable">
+							<br><br><br>
+							<h1>Please select the table on the left</h1>
+							<h2><==</h2>
+						</div>
+						<div id="tc-pokemonspercity" class="col-lg-12 poketable">
 							<table id="pokemonspercity" class="display compact nowrap" width="100%">
-							<thead>
-								<tr>
-									<th>#</th>			<!-- 0 -->
-									<th>Pokemon</th>	<!-- 1 -->
-									<th>Region</th>		<!-- 2 -->
-									<th>Route</th>		<!-- 3 -->
-									<th>Min Lv</th>	<!-- 4 -->
-									<th>Max Lv</th>	<!-- 5 -->
-									<th>Min Exp</th>	<!-- 6 -->
-									<th>Max Exp</th>	<!-- 7 -->
-									<th>Min Team Exp</th>	<!-- 6 -->
-									<th>Max Team Exp</th>	<!-- 7 -->
-								</tr>
-							</thead>
-							<tbody></tbody>
-							<tfoot>
-								<tr>
-									<th>#</th>			<!-- 0 -->
-									<th></th>	<!-- 1 -->
-									<th></th>		<!-- 2 -->
-									<th></th>		<!-- 3 -->
-									<th>Min Lv</th>	<!-- 4 -->
-									<th>Max Lv</th>	<!-- 5 -->
-									<th>Min Exp</th>	<!-- 6 -->
-									<th>Max Exp</th>	<!-- 7 -->
-									<th>Min Team Exp</th>	<!-- 6 -->
-									<th>Max Team Exp</th>	<!-- 7 -->
-								</tr>
-							</tfoot>
-						</table>
+								<thead>
+									<tr>
+										<th>#</th>			<!-- 0 -->
+										<th>Pokemon</th>	<!-- 1 -->
+										<th>Region</th>		<!-- 2 -->
+										<th>Route</th>		<!-- 3 -->
+										<th>Min Lv</th>	<!-- 4 -->
+										<th>Max Lv</th>	<!-- 5 -->
+										<th>Min Exp</th>	<!-- 6 -->
+										<th>Max Exp</th>	<!-- 7 -->
+										<th>Min Team Exp</th>	<!-- 6 -->
+										<th>Max Team Exp</th>	<!-- 7 -->
+									</tr>
+								</thead>
+								<tbody></tbody>
+								<tfoot>
+									<tr>
+										<th>#</th>			<!-- 0 -->
+										<th></th>	<!-- 1 -->
+										<th></th>		<!-- 2 -->
+										<th></th>		<!-- 3 -->
+										<th>Min Lv</th>	<!-- 4 -->
+										<th>Max Lv</th>	<!-- 5 -->
+										<th>Min Exp</th>	<!-- 6 -->
+										<th>Max Exp</th>	<!-- 7 -->
+										<th>Min Team Exp</th>	<!-- 6 -->
+										<th>Max Team Exp</th>	<!-- 7 -->
+									</tr>
+								</tfoot>
+							</table>
+						</div>
+						<div id="tc-pokedex" class="col-lg-12 poketable">
+							<table id="pokedex" class="display compact nowrap" width="100%">
+								<thead>
+									<tr>
+										<th>#</th>			<!-- 0 -->
+										<th>Pokemon</th>	<!-- 1 -->
+										<th>Type</th>		<!-- 2 -->
+										<th>ATK</th>		<!-- 3 -->
+										<th>DEF</th>		<!-- 4 -->
+										<th>SPD</th>		<!-- 5 -->
+										<th>Base Exp</th>	<!-- 6 -->
+										<th>Catch Rate</th>	<!-- 7 -->
+										<th>Growth Rate</th><!-- 8 -->
+										<th>Evolution</th>	<!-- 9 -->
+										<th>Routes</th>		<!-- 10 -->
+										<th>Power</th>		<!-- 11 -->
+									</tr>
+								</thead>
+								<tbody></tbody>
+								<tfoot>
+									<tr>
+										<th>#</th>			<!-- 0 -->
+										<th>Pokemon</th>	<!-- 1 -->
+										<th>Type</th>		<!-- 2 -->
+										<th>Lv.100</th><!-- 3 -->
+										<th>Lv.100</th><!-- 4 -->
+										<th>Lv.100</th><!-- 5 -->
+										<th>Base Exp</th>	<!-- 6 -->
+										<th>Catch Rate</th>	<!-- 7 -->
+										<th>Growth Rate</th><!-- 8 -->
+										<th></th>	<!-- 9 -->
+										<th>Routes</th>		<!-- 10 -->
+										<th>Power</th>		<!-- 11 -->
+									</tr>
+								</tfoot>
+							</table>
+						</div>
+						<div id="tc-pokemap" class="col-lg-12 poketable">
+							<br><br><br>
+							<h1>Pok&eacute;map Soon</h1>
+							<h2>=))))))))))</h2>
 						</div>
 					</div>
 				</div>

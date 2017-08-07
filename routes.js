@@ -1905,7 +1905,7 @@ const ROUTES = {
     , maxLevel: 51
     , unlocked: true
     }
-	, special127: {
+	, special150: {
       name: 'Pinwheel Forest'
     , pokes: ['Gurdurr', 'Palpitoad', 'Throh', 'Cottonee', 'Swadloon', 'Petilil', 'Whirlipede', 'Pansage', 'Pansear', 'Panpour'] 
     , minLevel: 54
@@ -2287,14 +2287,5 @@ const ROUTES = {
     , maxLevel: 30
     , unlocked: true
     }
-},
-	Event: {
-    event: {
-      name: 'Pallet Town'
-    , pokes: ['M-Charizard Y'] 
-    , minLevel: 100
-    , maxLevel: 100
-    , unlocked: true
-    } 
 }
 }

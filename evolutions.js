@@ -1819,6 +1819,10 @@ const EVOLUTIONS = {
     "level":"15",
     "to":"Keldeo-R"
   },
+  "Keldeo-R":{
+    "level":"15",
+    "to":"Keldeo"
+  },
   "Meloetta":{
     "level":"50",
     "to":"Meloetta-P"
