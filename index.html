@@ -22,6 +22,7 @@
 		<script type="text/javascript" src="js/datatables.min.js"></script>
 		<script type="text/javascript" src="js/dataTables.pageResize.min.js"></script>
 		<script type="text/javascript" src="js/jquery.dataTables.yadcf.js"></script>
+		<script type="text/javascript" src="js/tools.js"></script>
 
 	</head>
 	<body>
@@ -87,10 +88,10 @@
 						
 					</li>
 					<li>
-						<a href="#" id="version-number">Data from version 1.8.0</a>
+						<a href="#" id="version-number">Data from latest version</a>
 					</li>
 					<li>
-						<a href="#" id="version-number">Reference version 0.2</a>
+						<a href="#" id="version-number">Reference version 0.3</a>
 					</li>
 				</ul>
 			</div>
@@ -117,6 +118,16 @@
 					<div class="row">
 						<section id="item-caracteristics" class="item-desc-content col-sm-12 col-md-6">
 							<h4>Characteristics</h4>
+							<table class="table table-striped">
+								<thead>
+									<th>Stat</th>
+									<th class="theader">@Level 100</th>
+									<th class="theader">Rank</th>
+									<th id="item-stat-typerank" class="theader">{Type} Rank</th>
+								</thead>
+								<tbody id="item-stats">
+								</tbody>
+							</table>
 							<div id="item-requirements-tilesize">
 								<div class="item-properties"></div>
 							</div>
@@ -139,7 +150,6 @@
 									<th>Evolve to</th>
 								</thead>
 								<tbody id="item-forms">
-									
 								</tbody>
 							</table>
 						</section>

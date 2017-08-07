@@ -9,11 +9,28 @@ const statValue = (raw, level) => {
   level = level || 1;
   return Math.floor((((raw + 50) * level) / (150)))
 }
+const statHp = (rawHp, level) => {
+  return Math.floor(((rawHp * level) / 40))
+}
 
 var Pokemons = {};
 var PokemonPokedex = [];
 var PokemonFamily = [];
 var PokemonsPerCity = [];
+var PokemonPokedexRankingHp = [];
+var PokemonPokedexRankingAtk = [];
+var PokemonPokedexRankingDef = [];
+var PokemonPokedexRankingSpeed = [];
+var PokemonPokedexRankingPower = [];
+var PokemonPokedexRankingDps = [];
+
+var PokemonPokedexPerType = {};
+var PokemonPokedexRankingHpPerType = [];
+var PokemonPokedexRankingAtkPerType = [];
+var PokemonPokedexRankingDefPerType = [];
+var PokemonPokedexRankingSpeedPerType = [];
+var PokemonPokedexRankingPowerPerType = [];
+var PokemonPokedexRankingDpsPerType = [];
 
 var formatPokemonArray = function() {
   for (pdt in POKEDEX) {
@@ -36,7 +53,9 @@ var formatPokemonArray = function() {
       className : p_name.replace(' ','_'),
       catch     : p_catch,
       growth    : p_growth,
-      p_hp      : p_hp,
+      hp        : p_hp,
+      hplv1     : statHp(p_hp,1),
+      hplv100   : statHp(p_hp,100),
       atk       : p_atk,
       atklv1    : statValue(p_atk),
       atklv100  : statValue(p_atk,100),
@@ -158,6 +177,34 @@ var PokemonsToPokedex = function() {
     PokemonPokedex.push(Pokemons[poke]);
   }
 };
+
+var setPokemonRankings = function() {
+  PokemonPokedexRankingHp = sortByAttribute(PokemonPokedex, '-hplv100');
+  PokemonPokedexRankingAtk = sortByAttribute(PokemonPokedex, '-atklv100');
+  PokemonPokedexRankingDef = sortByAttribute(PokemonPokedex, '-deflv100');
+  PokemonPokedexRankingSpeed = sortByAttribute(PokemonPokedex, 'hardcappedspeedlv100');
+  PokemonPokedexRankingPower = sortByAttribute(PokemonPokedex, '-powerlv100');
+  PokemonPokedexRankingDps = sortByAttribute(PokemonPokedex, '-dpslv100');
+
+  /* set rankings per types */
+  /* separate all pokemons per types */
+  for (tt in TYPES){
+    PokemonPokedexPerType[tt] = [];
+    for (var i = 0; i < PokemonPokedex.length; i++) {
+      if (PokemonPokedex[i].type1 == tt)
+        PokemonPokedexPerType[tt].push(PokemonPokedex[i]);
+    };
+  }
+  /* now sort all type groups */
+  for (ttr in PokemonPokedexPerType) {
+    PokemonPokedexRankingHpPerType[ttr] = sortByAttribute(PokemonPokedexPerType[ttr], '-hplv100');
+    PokemonPokedexRankingAtkPerType[ttr] = sortByAttribute(PokemonPokedexPerType[ttr], '-atklv100');
+    PokemonPokedexRankingDefPerType[ttr] = sortByAttribute(PokemonPokedexPerType[ttr], '-deflv100');
+    PokemonPokedexRankingSpeedPerType[ttr] = sortByAttribute(PokemonPokedexPerType[ttr], 'hardcappedspeedlv100');
+    PokemonPokedexRankingPowerPerType[ttr] = sortByAttribute(PokemonPokedexPerType[ttr], '-powerlv100');
+    PokemonPokedexRankingDpsPerType[ttr] = sortByAttribute(PokemonPokedexPerType[ttr], '-dpslv100');
+  }
+}
 
 var buildPokeByCityData = function() {
   for (region in ROUTES) {
@@ -469,17 +516,20 @@ $(document).ready(function() {
         "aTargets": [7],
         "mData": "catch",
         "mRender": function ( data, type, full ) {
-          return (parseInt(data)/3).toLocaleString('en-US', {
-              minimumFractionDigits: 1,
-              maximumFractionDigits: 2
-          }) + "%";
+          var catchrate = '';
+          if (full.hasOwnProperty('routes')) {
+            catchrate = (parseInt(data)/3).toLocaleString('en-US', {
+                minimumFractionDigits: 1,
+                maximumFractionDigits: 2
+            }) + "%";
+          }
+          return catchrate;
         }
       },
       {
         "aTargets": [9],
         "mData": "evolution",
         "mRender": function ( data, type, full ) {
-
           if (data) {
             return data + ' <span class="tsmall">('+full.evollevel+')</span>';
           } else {
@@ -488,9 +538,7 @@ $(document).ready(function() {
             } else {
               return '';
             }
-            
           }
-          
         }
       },
       {
@@ -633,6 +681,7 @@ $(document).ready(function() {
   // load table from url
   // if no table, load default
   //$( "#menupokedex" ).trigger( "click" );
+  setPokemonRankings();
 });
 
 
@@ -653,6 +702,650 @@ function formatProperty(propertyType, propertyData, orientation, parentname) {
   /* property specific formattage */
 
   /* Characteristics */
+  if (propertyType == 'stats' && propertyData) {
+    var cellb = '<td>';
+    var cella = '</td>';
+
+
+    /* ***** *
+     * HP 
+     * ***** */
+    tHtml += '<tr>';
+    tHtml += cellb+'HP'+cella;
+    tHtml += cellb+propertyData.hplv100.toLocaleString('en-US', {
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0
+          })+cella;
+    /* HP RANK */
+    var hprankfirst = 0;
+    var hplast = 0;
+    var hpranklast = 0;
+    /* Find value of the pokemon */
+    for (var i = 0; i < PokemonPokedexRankingHp.length; i++) {
+      if (PokemonPokedexRankingHp[i].name == propertyData.name)
+        hpval = PokemonPokedexRankingHp[i].hplv100;
+    };
+    /* Find highest and lowest rank for the value */
+    for (var i = 0; i < PokemonPokedexRankingHp.length; i++) {
+      if (PokemonPokedexRankingHp[i].hplv100 == hpval) {
+        if (hprankfirst == 0)
+          hprankfirst = (i+1);
+        hpranklast = (i+1);
+      }
+    };
+    var colorfirstratio =  hprankfirst / PokemonPokedexRankingHp.length;
+    var colorlastratio =  hpranklast / PokemonPokedexRankingHp.length;
+    var colorfirst = '';
+    var colorlast = '';
+    if (colorfirstratio < 0.05)
+      colorfirst = 'Best';
+    else if (colorfirstratio < 0.25)
+      colorfirst = 'Great';
+    else if (colorfirstratio < 0.5) 
+      colorfirst = 'Good';
+    else if (colorfirstratio < 0.5) 
+      colorfirst = 'Average';
+    else 
+      colorfirst = 'Bad';
+
+    if (colorlastratio < 0.05)
+      colorlast = 'Best';
+    else if (colorlastratio < 0.25)
+      colorlast = 'Great';
+    else if (colorlastratio < 0.5) 
+      colorlast = 'Good';
+    else if (colorlastratio < 0.5) 
+      colorlast = 'Average';
+    else 
+      colorlast = 'Bad';
+
+    if (hprankfirst == hpranklast)
+      tHtml += cellb+'<span class="rank'+colorfirst+'">'+hprankfirst+'</span> / '+PokemonPokedexRankingHp.length+cella;
+    else
+      tHtml += cellb+'<span class="rank'+colorfirst+'">'+hprankfirst+'</span>-<span class="rank'+colorlast+'">'+hpranklast+'</span> / '+PokemonPokedexRankingHp.length+cella;
+
+    /* HP RANK TYPE */
+    var hprankfirst = 0;
+    var hplast = 0;
+    var hpranklast = 0;
+    /* Find value of the pokemon */
+    for (var i = 0; i < PokemonPokedexRankingHpPerType[propertyData.type1].length; i++) {
+      if (PokemonPokedexRankingHpPerType[propertyData.type1][i].name == propertyData.name)
+        hpval = PokemonPokedexRankingHpPerType[propertyData.type1][i].hplv100;
+    };
+    /* Find highest and lowest rank for the value */
+    for (var i = 0; i < PokemonPokedexRankingHpPerType[propertyData.type1].length; i++) {
+      if (PokemonPokedexRankingHpPerType[propertyData.type1][i].hplv100 == hpval) {
+        if (hprankfirst == 0)
+          hprankfirst = (i+1);
+        hpranklast = (i+1);
+      }
+    };
+    var colorfirstratio =  hprankfirst / PokemonPokedexRankingHpPerType[propertyData.type1].length;
+    var colorlastratio =  hpranklast / PokemonPokedexRankingHpPerType[propertyData.type1].length;
+    var colorfirst = '';
+    var colorlast = '';
+    if (colorfirstratio < 0.05)
+      colorfirst = 'Best';
+    else if (colorfirstratio < 0.25)
+      colorfirst = 'Great';
+    else if (colorfirstratio < 0.5) 
+      colorfirst = 'Good';
+    else if (colorfirstratio < 0.5) 
+      colorfirst = 'Average';
+    else 
+      colorfirst = 'Bad';
+
+    if (colorlastratio < 0.05)
+      colorlast = 'Best';
+    else if (colorlastratio < 0.25)
+      colorlast = 'Great';
+    else if (colorlastratio < 0.5) 
+      colorlast = 'Good';
+    else if (colorlastratio < 0.5) 
+      colorlast = 'Average';
+    else 
+      colorlast = 'Bad';
+
+    if (hprankfirst == hpranklast)
+      tHtml += cellb+'<span class="rank'+colorfirst+'">'+hprankfirst+'</span> / '+PokemonPokedexRankingHpPerType[propertyData.type1].length+cella;
+    else
+      tHtml += cellb+'<span class="rank'+colorfirst+'">'+hprankfirst+'</span>-<span class="rank'+colorlast+'">'+hpranklast+'</span> / '+PokemonPokedexRankingHpPerType[propertyData.type1].length+cella;
+    tHtml += '</tr>';
+
+    /* ***** *
+     * ATK 
+     * ***** */
+    tHtml += '<tr>';
+    tHtml += cellb+'ATK'+cella;
+    tHtml += cellb+propertyData.atklv100.toLocaleString('en-US', {
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0
+          })+cella;
+    /* ATK RANK */
+    var atkrankfirst = 0;
+    var atklast = 0;
+    var atkranklast = 0;
+    /* Find value of the pokemon */
+    for (var i = 0; i < PokemonPokedexRankingAtk.length; i++) {
+      if (PokemonPokedexRankingAtk[i].name == propertyData.name)
+        atkval = PokemonPokedexRankingAtk[i].atklv100;
+    };
+    /* Find highest and lowest rank for the value */
+    for (var i = 0; i < PokemonPokedexRankingAtk.length; i++) {
+      if (PokemonPokedexRankingAtk[i].atklv100 == atkval) {
+        if (atkrankfirst == 0)
+          atkrankfirst = (i+1);
+        atkranklast = (i+1);
+      }
+    };
+    var colorfirstratio =  atkrankfirst / PokemonPokedexRankingAtk.length;
+    var colorlastratio =  atkranklast / PokemonPokedexRankingAtk.length;
+    var colorfirst = '';
+    var colorlast = '';
+    if (colorfirstratio < 0.05)
+      colorfirst = 'Best';
+    else if (colorfirstratio < 0.25)
+      colorfirst = 'Great';
+    else if (colorfirstratio < 0.5) 
+      colorfirst = 'Good';
+    else if (colorfirstratio < 0.5) 
+      colorfirst = 'Average';
+    else 
+      colorfirst = 'Bad';
+
+    if (colorlastratio < 0.05)
+      colorlast = 'Best';
+    else if (colorlastratio < 0.25)
+      colorlast = 'Great';
+    else if (colorlastratio < 0.5) 
+      colorlast = 'Good';
+    else if (colorlastratio < 0.5) 
+      colorlast = 'Average';
+    else 
+      colorlast = 'Bad';
+
+    if (atkrankfirst == atkranklast)
+      tHtml += cellb+'<span class="rank'+colorfirst+'">'+atkrankfirst+'</span> / '+PokemonPokedexRankingAtk.length+cella;
+    else
+      tHtml += cellb+'<span class="rank'+colorfirst+'">'+atkrankfirst+'</span>-<span class="rank'+colorlast+'">'+atkranklast+'</span> / '+PokemonPokedexRankingAtk.length+cella;
+
+    /* ATK RANK TYPE */
+    var atkrankfirst = 0;
+    var atklast = 0;
+    var atkranklast = 0;
+    /* Find value of the pokemon */
+    for (var i = 0; i < PokemonPokedexRankingAtkPerType[propertyData.type1].length; i++) {
+      if (PokemonPokedexRankingAtkPerType[propertyData.type1][i].name == propertyData.name)
+        atkval = PokemonPokedexRankingAtkPerType[propertyData.type1][i].atklv100;
+    };
+    /* Find highest and lowest rank for the value */
+    for (var i = 0; i < PokemonPokedexRankingAtkPerType[propertyData.type1].length; i++) {
+      if (PokemonPokedexRankingAtkPerType[propertyData.type1][i].atklv100 == atkval) {
+        if (atkrankfirst == 0)
+          atkrankfirst = (i+1);
+        atkranklast = (i+1);
+      }
+    };
+    var colorfirstratio =  atkrankfirst / PokemonPokedexRankingAtkPerType[propertyData.type1].length;
+    var colorlastratio =  atkranklast / PokemonPokedexRankingAtkPerType[propertyData.type1].length;
+    var colorfirst = '';
+    var colorlast = '';
+    if (colorfirstratio < 0.05)
+      colorfirst = 'Best';
+    else if (colorfirstratio < 0.25)
+      colorfirst = 'Great';
+    else if (colorfirstratio < 0.5) 
+      colorfirst = 'Good';
+    else if (colorfirstratio < 0.5) 
+      colorfirst = 'Average';
+    else 
+      colorfirst = 'Bad';
+
+    if (colorlastratio < 0.05)
+      colorlast = 'Best';
+    else if (colorlastratio < 0.25)
+      colorlast = 'Great';
+    else if (colorlastratio < 0.5) 
+      colorlast = 'Good';
+    else if (colorlastratio < 0.5) 
+      colorlast = 'Average';
+    else 
+      colorlast = 'Bad';
+
+    if (atkrankfirst == atkranklast)
+      tHtml += cellb+'<span class="rank'+colorfirst+'">'+atkrankfirst+'</span> / '+PokemonPokedexRankingAtkPerType[propertyData.type1].length+cella;
+    else
+      tHtml += cellb+'<span class="rank'+colorfirst+'">'+atkrankfirst+'</span>-<span class="rank'+colorlast+'">'+atkranklast+'</span> / '+PokemonPokedexRankingAtkPerType[propertyData.type1].length+cella;
+    tHtml += '</tr>';
+
+    /* ***** *
+     * DEF 
+     * ***** */
+    tHtml += '<tr>';
+    tHtml += cellb+'DEF'+cella;
+    tHtml += cellb+propertyData.deflv100.toLocaleString('en-US', {
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0
+          })+cella;
+    /* DEF RANK */
+    var defrankfirst = 0;
+    var deflast = 0;
+    var defranklast = 0;
+    /* Find value of the pokemon */
+    for (var i = 0; i < PokemonPokedexRankingDef.length; i++) {
+      if (PokemonPokedexRankingDef[i].name == propertyData.name)
+        defval = PokemonPokedexRankingDef[i].deflv100;
+    };
+    /* Find highest and lowest rank for the value */
+    for (var i = 0; i < PokemonPokedexRankingDef.length; i++) {
+      if (PokemonPokedexRankingDef[i].deflv100 == defval) {
+        if (defrankfirst == 0)
+          defrankfirst = (i+1);
+        defranklast = (i+1);
+      }
+    };
+    var colorfirstratio =  defrankfirst / PokemonPokedexRankingDef.length;
+    var colorlastratio =  defranklast / PokemonPokedexRankingDef.length;
+    var colorfirst = '';
+    var colorlast = '';
+    if (colorfirstratio < 0.05)
+      colorfirst = 'Best';
+    else if (colorfirstratio < 0.25)
+      colorfirst = 'Great';
+    else if (colorfirstratio < 0.5) 
+      colorfirst = 'Good';
+    else if (colorfirstratio < 0.5) 
+      colorfirst = 'Average';
+    else 
+      colorfirst = 'Bad';
+
+    if (colorlastratio < 0.05)
+      colorlast = 'Best';
+    else if (colorlastratio < 0.25)
+      colorlast = 'Great';
+    else if (colorlastratio < 0.5) 
+      colorlast = 'Good';
+    else if (colorlastratio < 0.5) 
+      colorlast = 'Average';
+    else 
+      colorlast = 'Bad';
+
+    if (defrankfirst == defranklast)
+      tHtml += cellb+'<span class="rank'+colorfirst+'">'+defrankfirst+'</span> / '+PokemonPokedexRankingDef.length+cella;
+    else
+      tHtml += cellb+'<span class="rank'+colorfirst+'">'+defrankfirst+'</span>-<span class="rank'+colorlast+'">'+defranklast+'</span> / '+PokemonPokedexRankingDef.length+cella;
+
+    /* DEF RANK TYPE */
+    var defrankfirst = 0;
+    var deflast = 0;
+    var defranklast = 0;
+    /* Find value of the pokemon */
+    for (var i = 0; i < PokemonPokedexRankingDefPerType[propertyData.type1].length; i++) {
+      if (PokemonPokedexRankingDefPerType[propertyData.type1][i].name == propertyData.name)
+        defval = PokemonPokedexRankingDefPerType[propertyData.type1][i].deflv100;
+    };
+    /* Find highest and lowest rank for the value */
+    for (var i = 0; i < PokemonPokedexRankingDefPerType[propertyData.type1].length; i++) {
+      if (PokemonPokedexRankingDefPerType[propertyData.type1][i].deflv100 == defval) {
+        if (defrankfirst == 0)
+          defrankfirst = (i+1);
+        defranklast = (i+1);
+      }
+    };
+    var colorfirstratio =  defrankfirst / PokemonPokedexRankingDefPerType[propertyData.type1].length;
+    var colorlastratio =  defranklast / PokemonPokedexRankingDefPerType[propertyData.type1].length;
+    var colorfirst = '';
+    var colorlast = '';
+    if (colorfirstratio < 0.05)
+      colorfirst = 'Best';
+    else if (colorfirstratio < 0.25)
+      colorfirst = 'Great';
+    else if (colorfirstratio < 0.5) 
+      colorfirst = 'Good';
+    else if (colorfirstratio < 0.5) 
+      colorfirst = 'Average';
+    else 
+      colorfirst = 'Bad';
+
+    if (colorlastratio < 0.05)
+      colorlast = 'Best';
+    else if (colorlastratio < 0.25)
+      colorlast = 'Great';
+    else if (colorlastratio < 0.5) 
+      colorlast = 'Good';
+    else if (colorlastratio < 0.5) 
+      colorlast = 'Average';
+    else 
+      colorlast = 'Bad';
+
+    if (defrankfirst == defranklast)
+      tHtml += cellb+'<span class="rank'+colorfirst+'">'+defrankfirst+'</span> / '+PokemonPokedexRankingDefPerType[propertyData.type1].length+cella;
+    else
+      tHtml += cellb+'<span class="rank'+colorfirst+'">'+defrankfirst+'</span>-<span class="rank'+colorlast+'">'+defranklast+'</span> / '+PokemonPokedexRankingDefPerType[propertyData.type1].length+cella;
+    tHtml += '</tr>';
+
+    /* ***** *
+     * SPEED 
+     * ***** */
+    tHtml += '<tr>';
+    tHtml += cellb+'SPEED'+cella;
+    tHtml += cellb+propertyData.hardcappedspeedlv100.toLocaleString('en-US', {
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 3
+          })+cella;
+    /* SPEED RANK */
+    var hardcappedspeedrankfirst = 0;
+    var hardcappedspeedlast = 0;
+    var hardcappedspeedranklast = 0;
+    /* Find value of the pokemon */
+    for (var i = 0; i < PokemonPokedexRankingSpeed.length; i++) {
+      if (PokemonPokedexRankingSpeed[i].name == propertyData.name)
+        hardcappedspeedval = PokemonPokedexRankingSpeed[i].hardcappedspeedlv100;
+    };
+    /* Find highest and lowest rank for the value */
+    for (var i = 0; i < PokemonPokedexRankingSpeed.length; i++) {
+      if (PokemonPokedexRankingSpeed[i].hardcappedspeedlv100 == hardcappedspeedval) {
+        if (hardcappedspeedrankfirst == 0)
+          hardcappedspeedrankfirst = (i+1);
+        hardcappedspeedranklast = (i+1);
+      }
+    };
+    var colorfirstratio =  hardcappedspeedrankfirst / PokemonPokedexRankingSpeed.length;
+    var colorlastratio =  hardcappedspeedranklast / PokemonPokedexRankingSpeed.length;
+    var colorfirst = '';
+    var colorlast = '';
+    if (colorfirstratio < 0.05)
+      colorfirst = 'Best';
+    else if (colorfirstratio < 0.25)
+      colorfirst = 'Great';
+    else if (colorfirstratio < 0.5) 
+      colorfirst = 'Good';
+    else if (colorfirstratio < 0.5) 
+      colorfirst = 'Average';
+    else 
+      colorfirst = 'Bad';
+
+    if (colorlastratio < 0.05)
+      colorlast = 'Best';
+    else if (colorlastratio < 0.25)
+      colorlast = 'Great';
+    else if (colorlastratio < 0.5) 
+      colorlast = 'Good';
+    else if (colorlastratio < 0.5) 
+      colorlast = 'Average';
+    else 
+      colorlast = 'Bad';
+
+    if (hardcappedspeedrankfirst == hardcappedspeedranklast)
+      tHtml += cellb+'<span class="rank'+colorfirst+'">'+hardcappedspeedrankfirst+'</span> / '+PokemonPokedexRankingSpeed.length+cella;
+    else
+      tHtml += cellb+'<span class="rank'+colorfirst+'">'+hardcappedspeedrankfirst+'</span>-<span class="rank'+colorlast+'">'+hardcappedspeedranklast+'</span> / '+PokemonPokedexRankingSpeed.length+cella;
+
+    /* SPEED RANK TYPE */
+    var hardcappedspeedrankfirst = 0;
+    var hardcappedspeedlast = 0;
+    var hardcappedspeedranklast = 0;
+    /* Find value of the pokemon */
+    for (var i = 0; i < PokemonPokedexRankingSpeedPerType[propertyData.type1].length; i++) {
+      if (PokemonPokedexRankingSpeedPerType[propertyData.type1][i].name == propertyData.name)
+        hardcappedspeedval = PokemonPokedexRankingSpeedPerType[propertyData.type1][i].hardcappedspeedlv100;
+    };
+    /* Find highest and lowest rank for the value */
+    for (var i = 0; i < PokemonPokedexRankingSpeedPerType[propertyData.type1].length; i++) {
+      if (PokemonPokedexRankingSpeedPerType[propertyData.type1][i].hardcappedspeedlv100 == hardcappedspeedval) {
+        if (hardcappedspeedrankfirst == 0)
+          hardcappedspeedrankfirst = (i+1);
+        hardcappedspeedranklast = (i+1);
+      }
+    };
+    var colorfirstratio =  hardcappedspeedrankfirst / PokemonPokedexRankingSpeedPerType[propertyData.type1].length;
+    var colorlastratio =  hardcappedspeedranklast / PokemonPokedexRankingSpeedPerType[propertyData.type1].length;
+    var colorfirst = '';
+    var colorlast = '';
+    if (colorfirstratio < 0.05)
+      colorfirst = 'Best';
+    else if (colorfirstratio < 0.25)
+      colorfirst = 'Great';
+    else if (colorfirstratio < 0.5) 
+      colorfirst = 'Good';
+    else if (colorfirstratio < 0.5) 
+      colorfirst = 'Average';
+    else 
+      colorfirst = 'Bad';
+
+    if (colorlastratio < 0.05)
+      colorlast = 'Best';
+    else if (colorlastratio < 0.25)
+      colorlast = 'Great';
+    else if (colorlastratio < 0.5) 
+      colorlast = 'Good';
+    else if (colorlastratio < 0.5) 
+      colorlast = 'Average';
+    else 
+      colorlast = 'Bad';
+
+    if (hardcappedspeedrankfirst == hardcappedspeedranklast)
+      tHtml += cellb+'<span class="rank'+colorfirst+'">'+hardcappedspeedrankfirst+'</span> / '+PokemonPokedexRankingSpeedPerType[propertyData.type1].length+cella;
+    else
+      tHtml += cellb+'<span class="rank'+colorfirst+'">'+hardcappedspeedrankfirst+'</span>-<span class="rank'+colorlast+'">'+hardcappedspeedranklast+'</span> / '+PokemonPokedexRankingSpeedPerType[propertyData.type1].length+cella;
+    tHtml += '</tr>';
+
+    /* ***** *
+     * POWER 
+     * ***** */
+    tHtml += '<tr>';
+    tHtml += cellb+'POWER'+cella;
+    tHtml += cellb+propertyData.powerlv100.toLocaleString('en-US', {
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0
+          })+cella;
+    /* POWER RANK */
+    var powerrankfirst = 0;
+    var powerlast = 0;
+    var powerranklast = 0;
+    /* Find value of the pokemon */
+    for (var i = 0; i < PokemonPokedexRankingPower.length; i++) {
+      if (PokemonPokedexRankingPower[i].name == propertyData.name)
+        powerval = PokemonPokedexRankingPower[i].powerlv100;
+    };
+    /* Find highest and lowest rank for the value */
+    for (var i = 0; i < PokemonPokedexRankingPower.length; i++) {
+      if (PokemonPokedexRankingPower[i].powerlv100 == powerval) {
+        if (powerrankfirst == 0)
+          powerrankfirst = (i+1);
+        powerranklast = (i+1);
+      }
+    };
+    var colorfirstratio =  powerrankfirst / PokemonPokedexRankingPower.length;
+    var colorlastratio =  powerranklast / PokemonPokedexRankingPower.length;
+    var colorfirst = '';
+    var colorlast = '';
+    if (colorfirstratio < 0.05)
+      colorfirst = 'Best';
+    else if (colorfirstratio < 0.25)
+      colorfirst = 'Great';
+    else if (colorfirstratio < 0.5) 
+      colorfirst = 'Good';
+    else if (colorfirstratio < 0.5) 
+      colorfirst = 'Average';
+    else 
+      colorfirst = 'Bad';
+
+    if (colorlastratio < 0.05)
+      colorlast = 'Best';
+    else if (colorlastratio < 0.25)
+      colorlast = 'Great';
+    else if (colorlastratio < 0.5) 
+      colorlast = 'Good';
+    else if (colorlastratio < 0.5) 
+      colorlast = 'Average';
+    else 
+      colorlast = 'Bad';
+
+    if (powerrankfirst == powerranklast)
+      tHtml += cellb+'<span class="rank'+colorfirst+'">'+powerrankfirst+'</span> / '+PokemonPokedexRankingPower.length+cella;
+    else
+      tHtml += cellb+'<span class="rank'+colorfirst+'">'+powerrankfirst+'</span>-<span class="rank'+colorlast+'">'+powerranklast+'</span> / '+PokemonPokedexRankingPower.length+cella;
+
+    /* POWER RANK TYPE */
+    var powerrankfirst = 0;
+    var powerlast = 0;
+    var powerranklast = 0;
+    /* Find value of the pokemon */
+    for (var i = 0; i < PokemonPokedexRankingPowerPerType[propertyData.type1].length; i++) {
+      if (PokemonPokedexRankingPowerPerType[propertyData.type1][i].name == propertyData.name)
+        powerval = PokemonPokedexRankingPowerPerType[propertyData.type1][i].powerlv100;
+    };
+    /* Find highest and lowest rank for the value */
+    for (var i = 0; i < PokemonPokedexRankingPowerPerType[propertyData.type1].length; i++) {
+      if (PokemonPokedexRankingPowerPerType[propertyData.type1][i].powerlv100 == powerval) {
+        if (powerrankfirst == 0)
+          powerrankfirst = (i+1);
+        powerranklast = (i+1);
+      }
+    };
+    var colorfirstratio =  powerrankfirst / PokemonPokedexRankingPowerPerType[propertyData.type1].length;
+    var colorlastratio =  powerranklast / PokemonPokedexRankingPowerPerType[propertyData.type1].length;
+    var colorfirst = '';
+    var colorlast = '';
+    if (colorfirstratio < 0.05)
+      colorfirst = 'Best';
+    else if (colorfirstratio < 0.25)
+      colorfirst = 'Great';
+    else if (colorfirstratio < 0.5) 
+      colorfirst = 'Good';
+    else if (colorfirstratio < 0.5) 
+      colorfirst = 'Average';
+    else 
+      colorfirst = 'Bad';
+
+    if (colorlastratio < 0.05)
+      colorlast = 'Best';
+    else if (colorlastratio < 0.25)
+      colorlast = 'Great';
+    else if (colorlastratio < 0.5) 
+      colorlast = 'Good';
+    else if (colorlastratio < 0.5) 
+      colorlast = 'Average';
+    else 
+      colorlast = 'Bad';
+
+    if (powerrankfirst == powerranklast)
+      tHtml += cellb+'<span class="rank'+colorfirst+'">'+powerrankfirst+'</span> / '+PokemonPokedexRankingPowerPerType[propertyData.type1].length+cella;
+    else
+      tHtml += cellb+'<span class="rank'+colorfirst+'">'+powerrankfirst+'</span>-<span class="rank'+colorlast+'">'+powerranklast+'</span> / '+PokemonPokedexRankingPowerPerType[propertyData.type1].length+cella;
+    tHtml += '</tr>';
+
+
+    /* ***** *
+     * DPS 
+     * ***** */
+    tHtml += '<tr>';
+    tHtml += cellb+'DPS'+cella;
+    tHtml += cellb+propertyData.dpslv100.toLocaleString('en-US', {
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0
+          })+cella;
+    /* DPS RANK */
+    var dpsrankfirst = 0;
+    var dpslast = 0;
+    var dpsranklast = 0;
+    /* Find value of the pokemon */
+    for (var i = 0; i < PokemonPokedexRankingDps.length; i++) {
+      if (PokemonPokedexRankingDps[i].name == propertyData.name)
+        dpsval = PokemonPokedexRankingDps[i].dpslv100;
+    };
+    /* Find highest and lowest rank for the value */
+    for (var i = 0; i < PokemonPokedexRankingDps.length; i++) {
+      if (PokemonPokedexRankingDps[i].dpslv100 == dpsval) {
+        if (dpsrankfirst == 0)
+          dpsrankfirst = (i+1);
+        dpsranklast = (i+1);
+      }
+    };
+    var colorfirstratio =  dpsrankfirst / PokemonPokedexRankingDps.length;
+    var colorlastratio =  dpsranklast / PokemonPokedexRankingDps.length;
+    var colorfirst = '';
+    var colorlast = '';
+    if (colorfirstratio < 0.05)
+      colorfirst = 'Best';
+    else if (colorfirstratio < 0.25)
+      colorfirst = 'Great';
+    else if (colorfirstratio < 0.5) 
+      colorfirst = 'Good';
+    else if (colorfirstratio < 0.5) 
+      colorfirst = 'Average';
+    else 
+      colorfirst = 'Bad';
+
+    if (colorlastratio < 0.05)
+      colorlast = 'Best';
+    else if (colorlastratio < 0.25)
+      colorlast = 'Great';
+    else if (colorlastratio < 0.5) 
+      colorlast = 'Good';
+    else if (colorlastratio < 0.5) 
+      colorlast = 'Average';
+    else 
+      colorlast = 'Bad';
+
+    if (dpsrankfirst == dpsranklast)
+      tHtml += cellb+'<span class="rank'+colorfirst+'">'+dpsrankfirst+'</span> / '+PokemonPokedexRankingDps.length+cella;
+    else
+      tHtml += cellb+'<span class="rank'+colorfirst+'">'+dpsrankfirst+'</span>-<span class="rank'+colorlast+'">'+dpsranklast+'</span> / '+PokemonPokedexRankingDps.length+cella;
+
+    /* DPS RANK TYPE */
+    var dpsrankfirst = 0;
+    var dpslast = 0;
+    var dpsranklast = 0;
+    /* Find value of the pokemon */
+    for (var i = 0; i < PokemonPokedexRankingDpsPerType[propertyData.type1].length; i++) {
+      if (PokemonPokedexRankingDpsPerType[propertyData.type1][i].name == propertyData.name)
+        dpsval = PokemonPokedexRankingDpsPerType[propertyData.type1][i].dpslv100;
+    };
+    /* Find highest and lowest rank for the value */
+    for (var i = 0; i < PokemonPokedexRankingDpsPerType[propertyData.type1].length; i++) {
+      if (PokemonPokedexRankingDpsPerType[propertyData.type1][i].dpslv100 == dpsval) {
+        if (dpsrankfirst == 0)
+          dpsrankfirst = (i+1);
+        dpsranklast = (i+1);
+      }
+    };
+    var colorfirstratio =  dpsrankfirst / PokemonPokedexRankingDpsPerType[propertyData.type1].length;
+    var colorlastratio =  dpsranklast / PokemonPokedexRankingDpsPerType[propertyData.type1].length;
+    var colorfirst = '';
+    var colorlast = '';
+    if (colorfirstratio < 0.05)
+      colorfirst = 'Best';
+    else if (colorfirstratio < 0.25)
+      colorfirst = 'Great';
+    else if (colorfirstratio < 0.5) 
+      colorfirst = 'Good';
+    else if (colorfirstratio < 0.5) 
+      colorfirst = 'Average';
+    else 
+      colorfirst = 'Bad';
+
+    if (colorlastratio < 0.05)
+      colorlast = 'Best';
+    else if (colorlastratio < 0.25)
+      colorlast = 'Great';
+    else if (colorlastratio < 0.5) 
+      colorlast = 'Good';
+    else if (colorlastratio < 0.5) 
+      colorlast = 'Average';
+    else 
+      colorlast = 'Bad';
+
+    if (dpsrankfirst == dpsranklast)
+      tHtml += cellb+'<span class="rank'+colorfirst+'">'+dpsrankfirst+'</span> / '+PokemonPokedexRankingDpsPerType[propertyData.type1].length+cella;
+    else
+      tHtml += cellb+'<span class="rank'+colorfirst+'">'+dpsrankfirst+'</span>-<span class="rank'+colorlast+'">'+dpsranklast+'</span> / '+PokemonPokedexRankingDpsPerType[propertyData.type1].length+cella;
+    tHtml += '</tr>';
+
+
+  }
 
   if (propertyType == 'forms' && propertyData) {
     for (poke in propertyData) {
@@ -665,9 +1358,18 @@ function formatProperty(propertyType, propertyData, orientation, parentname) {
 
       tHtml += '<tr>';
       tHtml += cellb+propertyData[poke].id+cella;
-      tHtml += cellb+propertyData[poke].name+cella;
+      if (parentname != propertyData[poke].name)
+        tHtml += cellb+'<a class="item-details-link" href="#'+propertyData[poke].className+'">'+propertyData[poke].name+'</a>'+cella;
+      else
+        tHtml += cellb+propertyData[poke].name+cella;
       tHtml += cellb+'<span class="typebadge type'+propertyData[poke].type1+'">'+propertyData[poke].type1+'</span>'+cella;
-      tHtml += cellb+propertyData[poke].catch+cella;
+      if (propertyData[poke].hasOwnProperty('routes'))
+        tHtml += cellb+(propertyData[poke].catch/3).toLocaleString('en-US', {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 2
+            })+'%'+cella;
+      else
+        tHtml += cellb+'Not catchable'+cella;
       if (propertyData[poke].evolution)
         tHtml += cellb+propertyData[poke].evolution+' ('+propertyData[poke].evollevel+')'+cella;
       else
@@ -715,6 +1417,15 @@ function printDescription(className) {
         thisName += '<span class="premium">Premium</span> ';
       thisName += '<span class="typebadge type'+descData.type1+'">'+descData.type1+'</span>' + '</small>'
       $('#item-name').html(thisName);
+
+      /* Pokemon Stats */
+
+      $('#item-stat-typerank').html('<span class="typebadge type'+descData.type1+'">'+descData.type1+'</span> Rank');
+      $('#item-stats').html(formatProperty('stats', descData));
+
+      /* Poke Type bonuses */
+
+      /* Pokemon Forms */
       if (descData.evolution || descData.evolfrom) {
         var thisFamily = {};
         for (fam in PokemonFamily) {
@@ -723,7 +1434,10 @@ function printDescription(className) {
           }
         }
         $('#item-forms').html(formatProperty('forms', thisFamily, 'h', descData.name));
+      } else {
+        $('#item-forms').html('<tr><td colspan="5">'+descData.name+' doesn\'t have any other form</td></tr>');
       }
+
       /* Characteristics */
       $('#item-requirements-buildlimit .item-properties').html(formatProperty('buildLimit', descData.buildLimit));
 

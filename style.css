@@ -285,7 +285,11 @@ a.tofilter {
 }
 
 
-.num {
+.theader {
+	text-align: center;
+}
+.num,
+#item-stats td {
     text-align: right;
 }
 .tsmall {
@@ -339,3 +343,9 @@ a.tofilter {
 .evolfrom {
 	font-size: 9px;
 }
+
+.rankBest { background-color : #34495e; color: #ecf0f1; padding: 0 3px; border-radius: 3px;}
+.rankGreat { color : #3498db; }
+.rankGood { color : #27ae60; }
+.rankAverage { color : #e67e22; }
+.rankBad { color : #c0392b; }
