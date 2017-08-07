@@ -377,6 +377,13 @@ $(document).ready(function() {
     order: [[ 0, 'asc' ]],
     aoColumnDefs: [
       {
+        "aTargets": [2],
+        "mData": "type1",
+        "mRender": function ( data, type, full ) {
+          return '<span class="typebadge type'+data+'">'+data+'</span>';
+        }
+      },
+      {
         "aTargets": [3],
         "mData": "atklv100",
         "mRender": function ( data, type, full ) {
@@ -467,14 +474,14 @@ $(document).ready(function() {
   });
 
   var filterableColumnNamesPD = [
-    "Pokemon",
-    "Region",
-    "Route"];
+    "PD1",
+    "PD2",
+    "PD3"];
   oTablePD = $('#pokedex').DataTable(); 
   yadcf.init(oTablePD, [/*
-    {column_number : 0 },*//*
-    {column_number : 1, filter_type: 'select', filter_default_label: 'All Pokemon', filter_reset_button_text: false},
-    {column_number : 2, filter_type: 'select', filter_default_label: 'All Region', filter_reset_button_text: false},*/
+    {column_number : 0 },*/
+    {column_number : 1, filter_type: 'select', filter_default_label: 'All Pokémons', filter_reset_button_text: false},
+    {column_number : 2, filter_type: 'select', filter_default_label: 'All Types', filter_reset_button_text: false},
     {column_number : 9, filter_type: 'select', filter_default_label: 'Pokémons', filter_reset_button_text: false}
       ], {filters_position: "footer", filters_tr_index: 2});
 

@@ -303,3 +303,33 @@ a.tofilter {
 .pokedex-img {
 	height: 30px;
 }
+
+
+.typebadge {
+    border-radius: 3px;
+    border-color: rgba(0,0,0,0.5);
+    border-width: 1px;
+    color: white;
+    font-size: 11px;
+	padding: 2px 3px;
+	font-weight: bold;
+}
+.typeFire { background-color: #F08030; }
+.typeWater { background-color: #6890F0; }
+.typeGrass { background-color: #78C850; }
+.typeElectric { background-color: #F8D030; }
+.typeIce { background-color: #98D8D8; }
+.typePsychic { background-color: #F85888; }
+.typeNormal { background-color: #A8A878; }
+.typeFighting { background-color: #C03028; }
+.typeFlying { background-color: #A890F0; }
+.typeGround { background-color: #E0C068; }
+.typeRock { background-color: #B8A038; }
+.typeBug { background-color: #A8B820; }
+.typePoison { background-color: #A040A0; }
+.typeGhost { background-color: #705898; }
+.typeDragon { background-color: #7038F8; }
+.typeDark { background-color: #705848; }
+.typeSteel { background-color: #B8B8D0; }
+.typeFairy { background-color: #EE99AC; }
+
