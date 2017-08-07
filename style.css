@@ -231,6 +231,7 @@ a.tofilter {
 #item-description {
 	display: none;
 	margin-bottom: 20px;
+	overflow-y: scroll;
 }
 #item-image {
 	max-height: 50px;
