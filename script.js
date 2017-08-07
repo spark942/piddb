@@ -12,6 +12,7 @@ const statValue = (raw, level) => {
 
 var Pokemons = {};
 var PokemonPokedex = [];
+var PokemonFamily = [];
 var PokemonsPerCity = [];
 
 var formatPokemonArray = function() {
@@ -32,6 +33,7 @@ var formatPokemonArray = function() {
     var p_id     = parseInt(pdt) +1;
     Pokemons[p_name] = {
       name      : p_name,
+      className : p_name.replace(' ','_'),
       catch     : p_catch,
       growth    : p_growth,
       p_hp      : p_hp,
@@ -86,11 +88,34 @@ var formatPokemonArray = function() {
 
 formatPokemonArray();
 
+var formatPokemonFamily = function() {
+  for (poke in Pokemons) {
+    var exists = false;
+    for (var i = 0; i < PokemonFamily.length; i++) {
+      if (PokemonFamily[i].hasOwnProperty(poke)) {
+        // should never come here
+      } else {
+        for (fam in PokemonFamily[i]) {
+          if (PokemonFamily[i][fam].evolution == poke) {
+            PokemonFamily[i][poke] = Pokemons[poke];
+            exists = true;
+          }
+        }
+      }
+    };
+    if (!exists) {
+      var family = {};
+      family[poke] = Pokemons[poke];
+      PokemonFamily.push(family);
+    }
+  }
+  console.log(PokemonFamily);
+}
 
-
-var formatPokemonCity = function(name, region, routename, min, max) {
+var formatPokemonCity = function(name, type, region, routename, min, max) {
   var PokemonCity = {
     name   : name,
+    type   : type,
     lvmin  : min,
     lvavg  : ((max + min) / 2),
     lvmax  : max,
@@ -146,7 +171,8 @@ var buildPokeByCityData = function() {
 
       for(var i = 0; i < ROUTES[region][city].pokes.length; i++){
         var pc_name = ROUTES[region][city].pokes[i];
-        PokemonsPerCity.push(formatPokemonCity(pc_name, pc_region, pc_routename, pc_minlv, pc_maxlv));
+        var pc_type = Pokemons[pc_name].type1;
+        PokemonsPerCity.push(formatPokemonCity(pc_name, pc_type, pc_region, pc_routename, pc_minlv, pc_maxlv));
       }
     }
   }
@@ -261,6 +287,13 @@ $(document).ready(function() {
     ], 
     order: [[ 7, 'desc' ], [ 5, 'desc' ]],
     aoColumnDefs: [
+      {
+        "aTargets": [1],
+        "mData": "name",
+        "mRender": function ( data, type, full ) {
+          return data+' <span class="typebadge type'+full.type+'">'+full.type+'</span>';
+        }
+      },
       /*{ 
         "sType": "numeric", 
         "sClass": "currency",
@@ -296,7 +329,6 @@ $(document).ready(function() {
   } ).draw();
 
   if (searchObj) {
-    console.log(searchObj);
     var presetFilters = [];
     for (var filterName in searchObj){
       if (filterableColumnNames.indexOf(filterName) > -1) {
@@ -500,6 +532,13 @@ $(document).ready(function() {
           });
         }
       },
+      {
+        "aTargets": [13],
+        "mData": "name",
+        "mRender": function ( data, type, full ) {
+          return '<a class="item-details-link" href="#'+data+'">Details</a>';
+        }
+      },
       /*{ 
         "sType": "numeric", 
         "sClass": "currency",
@@ -552,8 +591,6 @@ $(document).ready(function() {
     oTable.search($(this).val()).draw();
   });
 
-
-
   var curTable = 'pokedex';
 
   $(document).on('click', 'a.showtable', function() { 
@@ -598,3 +635,134 @@ $(document).ready(function() {
   //$( "#menupokedex" ).trigger( "click" );
 });
 
+
+/* *********************** *
+ *  POKEMON DESCRIPTION
+ * *********************** */
+var meta = {
+  dataVersion: '1.8.0',
+  imgSource:   'https://richardpaulastley.github.io/'
+};
+function formatProperty(propertyType, propertyData, orientation, parentname) {
+  var propertyType = propertyType || 'unknown';
+  var orientation = orientation || 'vertical';
+  var parentname = parentname || 'missingno';
+
+  var tHtml = '';
+
+  /* property specific formattage */
+
+  /* Characteristics */
+
+  if (propertyType == 'forms' && propertyData) {
+    for (poke in propertyData) {
+      var cellb = '<td>';
+      var cella = '</td>';
+      if (parentname == propertyData[poke].name) {
+        cellb = '<td><strong>';
+        var cella = '</strong></td>';
+      }
+
+      tHtml += '<tr>';
+      tHtml += cellb+propertyData[poke].id+cella;
+      tHtml += cellb+propertyData[poke].name+cella;
+      tHtml += cellb+'<span class="typebadge type'+propertyData[poke].type1+'">'+propertyData[poke].type1+'</span>'+cella;
+      tHtml += cellb+propertyData[poke].catch+cella;
+      if (propertyData[poke].evolution)
+        tHtml += cellb+propertyData[poke].evolution+' ('+propertyData[poke].evollevel+')'+cella;
+      else
+        tHtml += cellb+cella;
+      tHtml += '</tr>';
+    }
+  }
+
+
+  if (propertyType == 'tilesize' && propertyData)
+    tHtml += '<dt>Tile size </dt><dd>' + propertyData.tileSize+ ' (' + propertyData.tileWidth + 'x' + propertyData.tileHeight + ')</dd>';
+
+
+  if (propertyType == 'buildLimit' && propertyData)
+    tHtml += '<dt>Building limited to </dt><dd>' + propertyData+ '</dd>';
+
+  if (propertyType == 'requiresWorkers' && typeof(propertyData) !== 'undefined')
+    tHtml += '<dt>Worker needed to operate</dt><dd>' + (propertyData == true ? 'Yes' : 'No' ) + '</dd>';
+
+  if (propertyType == 'storesObj' && propertyData)
+    for (resource in propertyData)
+      tHtml += '<dt>Max ' + resource + '</dt><dd class="store">+' + propertyData[resource] + '</dd>';
+
+
+  /* End of the property */
+  if (tHtml.length == 0)
+    return tHtml;
+  if (orientation == 'vertical')
+    tHtml = '<dl class="item-property">' + tHtml;
+  else
+    tHtml = '<dl class="dl-horizontal item-property">' + tHtml;
+  tHtml += '</dl>';
+  return tHtml;
+}
+function printDescription(className) {
+  var className = className || 'unknown';
+  for (var i = PokemonPokedex.length - 1; i >= 0; i--) {
+    if (className == PokemonPokedex[i].className) {
+      console.log('found item', PokemonPokedex[i]);
+      var descData = PokemonPokedex[i];
+      var imgfsrc = descData.imgf.includes('http') ? descData.imgf : (meta.imgSource + descData.imgf);
+      $('#item-image').attr('src', imgfsrc);
+      var thisName = descData.name + ' <small>';
+      if (descData.requiPremium == true)
+        thisName += '<span class="premium">Premium</span> ';
+      thisName += '<span class="typebadge type'+descData.type1+'">'+descData.type1+'</span>' + '</small>'
+      $('#item-name').html(thisName);
+      if (descData.evolution || descData.evolfrom) {
+        var thisFamily = {};
+        for (fam in PokemonFamily) {
+          if (PokemonFamily[fam].hasOwnProperty(descData.name)) {
+            thisFamily = PokemonFamily[fam];
+          }
+        }
+        $('#item-forms').html(formatProperty('forms', thisFamily, 'h', descData.name));
+      }
+      /* Characteristics */
+      $('#item-requirements-buildlimit .item-properties').html(formatProperty('buildLimit', descData.buildLimit));
+
+
+      $('#item-requirements-buildlimit .item-properties').html(formatProperty('buildLimit', descData.buildLimit));
+
+      $('#item-requirements-workerneeded .item-properties').html(formatProperty('requiresWorkers', descData.requiresWorkers));
+
+      $('#item-requirements-storage .item-properties').html(formatProperty('storesObj', descData.storesObj, 'h'));
+    }
+  };
+}
+
+/* Open Item Description */
+function openItemDesc(className) { 
+  var className = className || null;
+  $('.item-properties').html('');
+  $('#utility-header').hide();
+  $('#generateorsmelt').hide();
+  $('#canbuild-header').hide();
+  $('#sell-header').hide();
+  $('#links-header').hide();
+
+  printDescription(className);
+  if ($("#item-description").is(":visible")) {
+    $('html, body').animate({
+      scrollTop: $("#item-description").offset().top -20
+    }, 600);
+  } else {
+    $( "#item-description" ).show( "slow" );
+  }
+};
+$(document).on('click', 'a.item-details-link', function(){
+  var className = $(this).attr('href').substring(1);
+  openItemDesc(className);
+});
+/* Close Item Description */
+$(document).on('click', 'a.item-details-close', function() { 
+  $( "#item-description" ).hide( "slow" );
+});
+
+formatPokemonFamily();
