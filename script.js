@@ -345,6 +345,7 @@ $(document).ready(function() {
     scrollX: true,
     fixedColumns: {
       leftColumns: 1,
+      rightColumns: 1,
     },
     data: PokemonPokedex,
     columns: [
@@ -384,6 +385,13 @@ $(document).ready(function() {
       },
       { /* 12 (Col 13) */
         name: "DPS", data: "dpslv100", "defaultContent": ""
+      },
+      { /* XX (Last Col) */
+        data: "className",
+        searchable: false,
+        orderable: false,
+        className:      'details-control',
+        defaultContent: ''
       }
     ], 
     order: [[ 0, 'asc' ]],
