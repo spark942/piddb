@@ -128,7 +128,6 @@ var formatPokemonFamily = function() {
       PokemonFamily.push(family);
     }
   }
-  console.log(PokemonFamily);
 }
 
 var formatPokemonCity = function(name, type, region, routename, min, max) {
