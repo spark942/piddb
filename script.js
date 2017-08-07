@@ -62,6 +62,9 @@ var formatPokemonArray = function() {
     Pokemons[p_name].powerlv1   = (Pokemons[p_name].atklv1*(1/Pokemons[p_name].hardcappedspeedlv1))*(1/3) + Pokemons[p_name].deflv1*(1-1/3);
     Pokemons[p_name].powerlv100 = (Pokemons[p_name].atklv100*(1/Pokemons[p_name].hardcappedspeedlv100))*(1/3) + Pokemons[p_name].deflv100*(1-1/3);
 
+    Pokemons[p_name].dpslv1   = (Pokemons[p_name].atklv1*(1/Pokemons[p_name].hardcappedspeedlv1));
+    Pokemons[p_name].dpslv100 = (Pokemons[p_name].atklv100*(1/Pokemons[p_name].hardcappedspeedlv100));
+
     /* Evolution */
     if (EVOLUTIONS.hasOwnProperty(p_name)) {
       Pokemons[p_name].evolution = EVOLUTIONS[p_name].to;
@@ -366,6 +369,9 @@ $(document).ready(function() {
       },
       { /* 11 (Col 12) */
         name: "Power", data: "powerlv100", "defaultContent": ""
+      },
+      { /* 12 (Col 13) */
+        name: "DPS", data: "dpslv100", "defaultContent": ""
       }
     ], 
     order: [[ 0, 'asc' ]],
@@ -431,7 +437,17 @@ $(document).ready(function() {
         "aTargets": [11],
         "mData": "powerlv100",
         "mRender": function ( data, type, full ) {
-          return (parseInt(data)/3).toLocaleString('en-US', {
+          return data.toLocaleString('en-US', {
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 1
+          }) + "";
+        }
+      },
+      {
+        "aTargets": [12],
+        "mData": "dpslv100",
+        "mRender": function ( data, type, full ) {
+          return data.toLocaleString('en-US', {
               minimumFractionDigits: 0,
               maximumFractionDigits: 1
           }) + "";
