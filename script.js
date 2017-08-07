@@ -62,8 +62,8 @@ var formatPokemonArray = function() {
     Pokemons[p_name].powerlv1   = (Pokemons[p_name].atklv1*(1/Pokemons[p_name].hardcappedspeedlv1))*(1/3) + Pokemons[p_name].deflv1*(1-1/3);
     Pokemons[p_name].powerlv100 = (Pokemons[p_name].atklv100*(1/Pokemons[p_name].hardcappedspeedlv100))*(1/3) + Pokemons[p_name].deflv100*(1-1/3);
 
-    Pokemons[p_name].dpslv1   = (Pokemons[p_name].atklv1*(1/Pokemons[p_name].hardcappedspeedlv1));
-    Pokemons[p_name].dpslv100 = (Pokemons[p_name].atklv100*(1/Pokemons[p_name].hardcappedspeedlv100));
+    Pokemons[p_name].dpslv1   = (Pokemons[p_name].atklv1*(1/Pokemons[p_name].hardcappedspeedlv1))/100;
+    Pokemons[p_name].dpslv100 = (Pokemons[p_name].atklv100*(1/Pokemons[p_name].hardcappedspeedlv100))/100;
 
     /* Evolution */
     if (EVOLUTIONS.hasOwnProperty(p_name)) {
@@ -440,7 +440,7 @@ $(document).ready(function() {
           return data.toLocaleString('en-US', {
               minimumFractionDigits: 0,
               maximumFractionDigits: 1
-          }) + "";
+          });
         }
       },
       {
@@ -450,7 +450,7 @@ $(document).ready(function() {
           return data.toLocaleString('en-US', {
               minimumFractionDigits: 0,
               maximumFractionDigits: 1
-          }) + "";
+          });
         }
       },
       /*{ 
