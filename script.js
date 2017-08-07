@@ -59,8 +59,8 @@ var formatPokemonArray = function() {
 
     Pokemons[p_name].hardcappedspeedlv1   = (Pokemons[p_name].speedlv1 > 0.3 ? Pokemons[p_name].speedlv1 : 0.3);
     Pokemons[p_name].hardcappedspeedlv100 = (Pokemons[p_name].speedlv100 > 0.3 ? Pokemons[p_name].speedlv100 : 0.3);
-    Pokemons[p_name].powerlv1   = (Pokemons[p_name].atklv1*(1/Pokemons[p_name].hardcappedspeedlv1))*0.3 + Pokemons[p_name].deflv1;
-    Pokemons[p_name].powerlv100 = (Pokemons[p_name].atklv100*(1/Pokemons[p_name].hardcappedspeedlv100))*0.3 + Pokemons[p_name].deflv100*0.7;
+    Pokemons[p_name].powerlv1   = (Pokemons[p_name].atklv1*(1/Pokemons[p_name].hardcappedspeedlv1))*(1/3) + Pokemons[p_name].deflv1*(1-1/3);
+    Pokemons[p_name].powerlv100 = (Pokemons[p_name].atklv100*(1/Pokemons[p_name].hardcappedspeedlv100))*(1/3) + Pokemons[p_name].deflv100*(1-1/3);
 
     /* Evolution */
     if (EVOLUTIONS.hasOwnProperty(p_name)) {
