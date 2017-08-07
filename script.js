@@ -681,6 +681,9 @@ $(document).ready(function() {
   // if no table, load default
   //$( "#menupokedex" ).trigger( "click" );
   setPokemonRankings();
+
+  var className = window.location.hash.substring(1);
+  openItemDesc(className);
 });
 
 
