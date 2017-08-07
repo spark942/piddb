@@ -109,15 +109,20 @@ var formatPokemonCity = function(name, region, routename, min, max) {
   /* Add route to pokedex pokemon */
   if (!Pokemons[name].hasOwnProperty('routes')) {
     Pokemons[name].routes = {};
+    Pokemons[name].routenames = [];
   }
   if (!Pokemons[name].routes.hasOwnProperty(region)) {
     Pokemons[name].routes[region] = [];
+    if (Pokemons[name].routenames.indexOf(region) == -1) {
+      Pokemons[name].routenames.push(region);
+    }
   }
   Pokemons[name].routes[region].push({
     routename: routename,
     lvmin    : min,
     lvmax    : max
   });
+
 
 
   return PokemonCity;
@@ -291,6 +296,7 @@ $(document).ready(function() {
   } ).draw();
 
   if (searchObj) {
+    console.log(searchObj);
     var presetFilters = [];
     for (var filterName in searchObj){
       if (filterableColumnNames.indexOf(filterName) > -1) {
@@ -371,7 +377,7 @@ $(document).ready(function() {
         name: "Evolution", data: "evolution", "defaultContent": ""
       },
       { /* 10 (Col 11) */
-        name: "Routes", data: "routes", "defaultContent": ""
+        name: "Routes", data: "routenames", "defaultContent": ""
       },
       { /* 11 (Col 12) */
         name: "Power", data: "powerlv100", "defaultContent": ""
@@ -449,19 +455,21 @@ $(document).ready(function() {
       },
       {
         "aTargets": [10],
-        "mData": "routes",
+        "mData": "routenames",
         "mRender": function ( data, type, full ) {
           var text = '';
           if (data && typeof data === 'object') {
             var i = 0;
-            for (Region in data){
+            for (var i = 0; i < data.length; i++){
               if (i > 0)
                 text += ', ';
-              text += '<span>'+Region+' <span class="tsmall">('+ data[Region].length +')</span></span>';
+              text += '<span><a class="pokemonregion" href="#" data-pokemon="'+full.name+'" data-region="'+data[i]+'">'+data[i]+'</a> <span class="tsmall">('+ full.routes[data[i]].length +')</span></span>';
               i++;
             };
+            return text;
+          } else {
+            return '';
           }
-          return text;
         }
       },
       {
@@ -506,8 +514,9 @@ $(document).ready(function() {
     {column_number : 0 },*/
     {column_number : 1, filter_type: 'select', filter_default_label: 'All Pokémons', filter_reset_button_text: false},
     {column_number : 2, filter_type: 'select', filter_default_label: 'All Types', filter_reset_button_text: false},
-    {column_number : 9, filter_type: 'select', filter_default_label: 'Pokémons', filter_reset_button_text: false}
-      ], {filters_position: "footer", filters_tr_index: 2});
+    {column_number : 9, filter_type: 'select', filter_default_label: 'Pokémons', filter_reset_button_text: false},
+    {column_number : 10, text_data_delimiter: ",", filter_default_label: 'All Regions', filter_reset_button_text: false}
+      ], {filters_position: "footer", filters_tr_index: 1});
 
 
 
@@ -540,7 +549,7 @@ $(document).ready(function() {
   var curTable = 'pokedex';
 
   $(document).on('click', 'a.showtable', function() { 
-    var showtable = $(this).attr('id').replace("menu", "");;
+    var showtable = $(this).attr('id').replace("menu", "");
     // remove selected menu class
     $(".showtable").removeClass("curtable");
     // remove current table class 
@@ -554,6 +563,28 @@ $(document).ready(function() {
     $("table.pokemonspercity").resize();
     $("table.pokedex").resize();
   });
+
+  $(document).on('click', 'a.pokemonregion', function() { 
+    var thisPokemon = $(this).attr('data-pokemon');
+    var thisRegion = $(this).attr('data-region');
+    $( "#menupokemonspercity" ).trigger( "click" );
+
+    var thisFilter = {
+      Region: thisRegion,
+      Pokemon: thisPokemon
+    }
+    var presetFilters = [];
+    for (var filterName in thisFilter){
+      if (filterableColumnNames.indexOf(filterName) > -1) {
+        var filterID = oTable.column(filterName+':name').index();
+        presetFilters.push([filterID, thisFilter[filterName]]);
+      }
+    }
+    
+    yadcf.exFilterColumn(oTable, presetFilters);
+
+  });
+
   // load table from url
   // if no table, load default
   //$( "#menupokedex" ).trigger( "click" );
