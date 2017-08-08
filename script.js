@@ -781,6 +781,8 @@ function setCookiedex(pokemonclass) {
       cookiedex[i] = "Bulbasaur";
   };
   console.log(cookiedex);
+  if (cookiedex.indexOf(pokemonclass) != -1)
+    cookiedex = removeA(cookiedex, pokemonclass);
   if (cookiedex.indexOf(pokemonclass) == -1 && pokemonclass.length > 2)
     cookiedex.push(pokemonclass);
   console.log(cookiedex);
