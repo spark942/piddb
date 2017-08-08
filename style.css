@@ -122,6 +122,9 @@ html,body { height: 100%; margin: 0px; padding: 0px; }
 .sidebar-nav > .divider-vertical a {
 	height: 30px;
 }
+
+
+
 .sidebar-nav > li > a.showtable.curtable {
 	background-color: white;
 	color: black;

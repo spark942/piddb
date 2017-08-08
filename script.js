@@ -122,6 +122,12 @@ var formatPokemonFamily = function() {
       } else {
         for (fam in PokemonFamily[i]) {
           if (PokemonFamily[i][fam].evolution == poke) {
+            //console.log(PokemonFamily[i][fam], " : " + PokemonFamily[i][fam].evolution + " ==> " + poke + " ||| ", Pokemons[poke]);
+            PokemonFamily[i][poke] = Pokemons[poke];
+            exists = true;
+          }
+          if (PokemonFamily[i][fam].evolfrom == poke) {
+            console.log(PokemonFamily[i][fam], " : " + PokemonFamily[i][fam].evolfrom + " ==> " + poke + " ||| ", Pokemons[poke]);
             PokemonFamily[i][poke] = Pokemons[poke];
             exists = true;
           }
