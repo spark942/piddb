@@ -712,6 +712,27 @@ function formatProperty(propertyType, propertyData, orientation, parentname) {
   /* property specific formattage */
 
   /* Characteristics */
+  if (propertyType == 'typemodstrong' && propertyData) {
+    for (defpoke in TYPES[propertyData.type1]) {
+      if (TYPES[propertyData.type1][defpoke] > 1) {
+        tHtml += '<div class="btn-group" role="group" aria-label="poketypemod">';
+        tHtml += '<button id="item-type" type="button" class="btn btn-default btn-xs disabled type'+defpoke+'">'+defpoke+'</button>';
+        tHtml += '<button type="button" class="btn btn-default btn-xs disabled">x'+TYPES[propertyData.type1][defpoke]+'</button>';
+        tHtml += '</div>';
+      }
+    }
+  }
+  if (propertyType == 'typemodweak' && propertyData) {
+    for (defpoke in TYPES[propertyData.type1]) {
+      if (TYPES[propertyData.type1][defpoke] < 1) {
+        tHtml += '<div class="btn-group" role="group" aria-label="poketypemod">';
+        tHtml += '<button id="item-type" type="button" class="btn btn-default btn-xs disabled type'+defpoke+'">'+defpoke+'</button>';
+        tHtml += '<button type="button" class="btn btn-default btn-xs disabled">x'+TYPES[propertyData.type1][defpoke]+'</button>';
+        tHtml += '</div>';
+      }
+    }
+  }
+
   if (propertyType == 'stats' && propertyData) {
     var cellb = '<td>';
     var cella = '</td>';
@@ -1353,8 +1374,6 @@ function formatProperty(propertyType, propertyData, orientation, parentname) {
     else
       tHtml += cellb+'<span class="rank'+colorfirst+'">'+dpsrankfirst+'</span>-<span class="rank'+colorlast+'">'+dpsranklast+'</span> / '+PokemonPokedexRankingDpsPerType[propertyData.type1].length+cella;
     tHtml += '</tr>';
-
-
   }
 
   if (propertyType == 'forms' && propertyData) {
@@ -1440,6 +1459,11 @@ function printDescription(className) {
       $('#item-type').removeClass();
       $('#item-type').addClass('btn btn-default disabled type'+descData.type1);
       $('#item-type').html(descData.type1);
+
+      /* Pokemon Type Modifier */
+      $('#item-typemod').html(descData.type1);
+      $('#item-typemod-strong').html(formatProperty('typemodstrong', descData));
+      $('#item-typemod-weak').html(formatProperty('typemodweak', descData));
 
       /* Pokemon Stats */
 

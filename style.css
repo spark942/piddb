@@ -242,8 +242,9 @@ a.tofilter {
 	color: black !important;
 }
 .imgplaceholder {
-	width: 104px;
-    height: 104px;
+	width: 102px;
+    height: 102px;
+    padding: 3px;
     background-repeat: no-repeat;
     background-size: contain;
     background-image: url('img/poke_placeholder.png');
@@ -384,3 +385,12 @@ a.tofilter {
 .rankGood { color : #27ae60; }
 .rankAverage { color : #e67e22; }
 .rankBad { color : #c0392b; }
+
+.typemodifiers {
+	padding-left: 5px;
+	padding-right: 5px;
+}
+.typemodifiers .btn-group {
+	margin-bottom:3px;
+	margin-right:3px;
+}
