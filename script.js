@@ -139,6 +139,7 @@ var formatPokemonFamily = function() {
 var formatPokemonCity = function(name, type, region, routename, min, max) {
   var PokemonCity = {
     name   : name,
+    className   : name.replace(' ','_'),
     type   : type,
     lvmin  : min,
     lvavg  : ((max + min) / 2),
@@ -313,6 +314,8 @@ $(document).ready(function() {
       },
       { /* 1 (Col 2) */
         name: "Pokemon", data: "name" },
+      { /* 1 (Col 2) */
+        name: "Type", data: "type" },
       { /* 2 (Col 3) */
         name: "Region", data: "region" },
       { /* 3 (Col 4) */
@@ -343,7 +346,14 @@ $(document).ready(function() {
         "aTargets": [1],
         "mData": "name",
         "mRender": function ( data, type, full ) {
-          return data+' <span class="typebadge type'+full.type+'">'+full.type+'</span>';
+          return '<a class="item-details-link" href="#'+full.className+'">'+data+'</a>';
+        }
+      },
+      {
+        "aTargets": [2],
+        "mData": "type",
+        "mRender": function ( data, type, full ) {
+          return ' <span class="typebadge type'+data+'">'+data+'</span>';
         }
       },
       /*{ 
@@ -371,8 +381,9 @@ $(document).ready(function() {
   yadcf.init(oTable, [/*
     {column_number : 0 },*/
     {column_number : 1, filter_type: 'select', filter_default_label: 'All Pokemon', filter_reset_button_text: false},
-    {column_number : 2, filter_type: 'select', filter_default_label: 'All Region', filter_reset_button_text: false},
-    {column_number : 3, filter_type: 'select', filter_default_label: 'All Route', filter_reset_button_text: false}
+    {column_number : 2, filter_type: 'select', filter_default_label: 'All Types', filter_reset_button_text: false},
+    {column_number : 3, filter_type: 'select', filter_default_label: 'All Region', filter_reset_button_text: false},
+    {column_number : 4, filter_type: 'select', filter_default_label: 'All Route', filter_reset_button_text: false}
       ], {filters_position: "footer", filters_tr_index: 2});
   oTable.on( 'order.dt search.dt', function () {
     oTable.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
@@ -429,7 +440,7 @@ $(document).ready(function() {
     scrollX: true,
     fixedColumns: {
       leftColumns: 1,
-      rightColumns: 1,
+      rightColumns: 2,
     },
     data: PokemonPokedex,
     columns: [
@@ -470,16 +481,16 @@ $(document).ready(function() {
       { /* 12 (Col 13) */
         name: "DPS", data: "dpslv100", "defaultContent": ""
       },
-      { /* XX (Last Col) */
-        data: "className",
-        searchable: false,
-        orderable: false,
-        className:      'details-control',
-        defaultContent: ''
-      }
     ], 
     order: [[ 0, 'asc' ]],
     aoColumnDefs: [
+      {
+        "aTargets": [1],
+        "mData": "name",
+        "mRender": function ( data, type, full ) {
+          return '<a class="item-details-link" href="#'+full.className+'">'+data+'</a>'
+        }
+      },
       {
         "aTargets": [2],
         "mData": "type1",
@@ -585,13 +596,6 @@ $(document).ready(function() {
           });
         }
       },
-      {
-        "aTargets": [13],
-        "mData": "name",
-        "mRender": function ( data, type, full ) {
-          return '<a class="item-details-link" href="#'+data+'">Details</a>';
-        }
-      },
       /*{ 
         "sType": "numeric", 
         "sClass": "currency",
@@ -660,11 +664,13 @@ $(document).ready(function() {
     $.fn.dataTable.tables( {visible: true, api: true} ).columns.adjust();
     $("table.pokemonspercity").resize();
     $("table.pokedex").resize();
+    $( "#item-description" ).hide( "slow" );
   });
 
   $(document).on('click', 'a.pokemonregion', function() { 
     var thisPokemon = $(this).attr('data-pokemon');
     var thisRegion = $(this).attr('data-region');
+    $( "#item-description" ).hide( "slow" );
     $( "#menupokemonspercity" ).trigger( "click" );
 
     var thisFilter = {
@@ -678,9 +684,26 @@ $(document).ready(function() {
         presetFilters.push([filterID, thisFilter[filterName]]);
       }
     }
-    
     yadcf.exFilterColumn(oTable, presetFilters);
+  });
+  $(document).on('click', 'a.pokemonroute', function() { 
+    var thisRegion = $(this).attr('data-region');
+    var thisRoute = $(this).attr('data-route');
+    $( "#item-description" ).hide( "slow" );
+    $( "#menupokemonspercity" ).trigger( "click" );
 
+    var thisFilter = {
+      Region: thisRegion,
+      Route: thisRoute
+    }
+    var presetFilters = [];
+    for (var filterName in thisFilter){
+      if (filterableColumnNames.indexOf(filterName) > -1) {
+        var filterID = oTable.column(filterName+':name').index();
+        presetFilters.push([filterID, thisFilter[filterName]]);
+      }
+    }
+    yadcf.exFilterColumn(oTable, presetFilters);
   });
 
   // load table from url
@@ -692,8 +715,34 @@ $(document).ready(function() {
   console.log(className.length);
   if (className.length > 0) 
     openItemDesc(className);
+  displayCookiedex()
 });
 
+function setCookiedex(pokemonclass) {
+  var cookiedex = getCookiedex() || [];
+  if (cookiedex.length >= 10) {
+    while (cookiedex.length >= 10)
+      cookiedex.shift();
+  }
+  if (cookiedex.indexOf(pokemonclass) == -1 && pokemonclass.length)
+    cookiedex.push(pokemonclass);
+  var cookiestring = cookiedex.join();
+  setCookie('cookiedex',cookiestring, 60);
+}
+
+function getCookiedex() {
+  return getCookie('cookiedex').split(',');
+}
+
+function displayCookiedex() {
+  var cdex = getCookiedex();
+  console.log(cdex);
+  var thtml = '';
+  for (var i = cdex.length - 1; i >= 0; i--) {
+    thtml += '<a class="item-details-link" href="#'+cdex[i]+'">'+cdex[i].replace('_',' ')+'</a>';
+  };
+  $('#cookiedex').html(thtml);
+}
 
 /* *********************** *
  *  POKEMON DESCRIPTION
@@ -1407,20 +1456,26 @@ function formatProperty(propertyType, propertyData, orientation, parentname) {
     }
   }
 
+  if (propertyType == 'routes' && propertyData) {
+    var cellb = '<td>';
+    var cellbnum = '<td class="num">';
 
-  if (propertyType == 'tilesize' && propertyData)
-    tHtml += '<dt>Tile size </dt><dd>' + propertyData.tileSize+ ' (' + propertyData.tileWidth + 'x' + propertyData.tileHeight + ')</dd>';
-
-
-  if (propertyType == 'buildLimit' && propertyData)
-    tHtml += '<dt>Building limited to </dt><dd>' + propertyData+ '</dd>';
-
-  if (propertyType == 'requiresWorkers' && typeof(propertyData) !== 'undefined')
-    tHtml += '<dt>Worker needed to operate</dt><dd>' + (propertyData == true ? 'Yes' : 'No' ) + '</dd>';
-
-  if (propertyType == 'storesObj' && propertyData)
-    for (resource in propertyData)
-      tHtml += '<dt>Max ' + resource + '</dt><dd class="store">+' + propertyData[resource] + '</dd>';
+    var cella = '</td>';
+    if (propertyData.hasOwnProperty('routes')) {
+      for (region in propertyData.routes) {
+        for (var i = 0; i < propertyData.routes[region].length; i++) {
+          tHtml += '<tr>';
+          tHtml += cellb+'<a class="pokemonregion" href="#" data-pokemon="'+propertyData.name+'" data-region="'+region+'">'+region+'</a>'+cella;
+          tHtml += cellb+'<a class="pokemonroute" href="#"  data-region="'+region+'" data-route="'+propertyData.routes[region][i].routename+'">'+propertyData.routes[region][i].routename+'</a>'+cella;
+          tHtml += cellbnum+propertyData.routes[region][i].lvmin+' - '+propertyData.routes[region][i].lvmax+cella;
+          tHtml += '</tr>';
+        };
+      }
+    } else {
+      tHtml += '<tr><td colspan="4">'+propertyData.name+' can\'t be captured. See other forms</td></tr>';
+    }
+    
+  }
 
 
   /* End of the property */
@@ -1485,6 +1540,9 @@ function printDescription(className) {
         $('#item-forms').html('<tr><td colspan="5">'+descData.name+' doesn\'t have any other form</td></tr>');
       }
 
+      /* Pokemon Routes */
+      $('#item-routes').html(formatProperty('routes', descData, 'h'));
+
       /* Characteristics */
       $('#item-requirements-buildlimit .item-properties').html(formatProperty('buildLimit', descData.buildLimit));
 
@@ -1502,11 +1560,6 @@ function printDescription(className) {
 function openItemDesc(className) { 
   var className = className || null;
   $('.item-properties').html('');
-  $('#utility-header').hide();
-  $('#generateorsmelt').hide();
-  $('#canbuild-header').hide();
-  $('#sell-header').hide();
-  $('#links-header').hide();
 
   printDescription(className);
   if ($("#item-description").is(":visible")) {
@@ -1516,6 +1569,10 @@ function openItemDesc(className) {
   } else {
     $( "#item-description" ).show( "slow" );
   }
+
+  setCookiedex(className);
+  /* Update Cookiedex */
+  displayCookiedex();
 };
 $(document).on('click', 'a.item-details-link', function(){
   var className = $(this).attr('href').substring(1);
@@ -1525,5 +1582,11 @@ $(document).on('click', 'a.item-details-link', function(){
 $(document).on('click', 'a.item-details-close', function() { 
   $( "#item-description" ).hide( "slow" );
 });
+$(document).keyup(function(e) {
+  if (e.keyCode == 27) { // escape key maps to keycode `27`
+    $( "#item-description" ).hide( "slow" );
+  }
+});
+
 
 formatPokemonFamily();

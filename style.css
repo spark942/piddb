@@ -127,6 +127,20 @@ html,body { height: 100%; margin: 0px; padding: 0px; }
 	color: black;
 }
 
+#cookiebar {
+	background-color: #795548 !important;
+}
+#cookiebar > a {
+	color: #FFEB3B !important;
+}
+#cookiedex,
+#cookiedex a {
+	text-indent: 40px;
+	line-height: 25px !important;
+	font-size: 12px !important;
+	color: #FFC107 !important;
+}
+
 #menu-toggle {
 	font-size: 30px;
 	color: #000;
@@ -241,6 +255,14 @@ a.tofilter {
 	font-weight: bold !important;
 	color: black !important;
 }
+#item-description button {
+	opacity: 1;
+	background-color: #e5e5e5;
+}
+#item-description button:hover,
+#item-description button:active {
+	text-shadow: none;
+}
 .imgplaceholder {
 	width: 102px;
     height: 102px;
@@ -252,8 +274,13 @@ a.tofilter {
     position: relative;
     float:left;
 }
+
 .imgplaceholder:nth-last-child():after {
 	clear: both;
+}
+.item-thumbnail{
+	display: inline-block !important;
+    vertical-align: middle;
 }
 .imgplaceholder .caption {
 	position: absolute;

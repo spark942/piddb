@@ -36,6 +36,11 @@
 							PokeIdle Database
 						</a>
 					</li>
+					<li class="sidebar-brand">
+						<a href="https://richardpaulastley.github.io/" target="_blank" id="page-title">
+							Play Here
+						</a>
+					</li>
 					<!-- <li>
 						<a href="https://spark942.github.io/piddb/" target="_blank">PokeIdle Database</a>
 					</li> -->
@@ -82,10 +87,12 @@
 						</a>
 					</li> -->
 					<li>
-							<button type="button" id="clearf" class="btn btn-default">Clear Filters</button>
+						<button type="button" id="clearf" class="btn btn-default">Clear Filters</button>
 					</li>
-					<li>
-						
+
+					<li id="cookiebar">
+						<a href="#">Cookiedex</a>
+						<div id="cookiedex"></div>
 					</li>
 					<li>
 						<a href="#" id="version-number">Data from latest version</a>
@@ -195,6 +202,16 @@
 								<tbody id="item-forms" class="table-hover">
 								</tbody>
 							</table>
+							<h4>Locations</h4>
+							<table class="table table-striped table-condensed">
+								<thead>
+									<th>Region</th>
+									<th>Route</th>
+									<th class="num">Level</th>
+								</thead>
+								<tbody id="item-routes" class="table-hover">
+								</tbody>
+							</table>
 						</section>
 						<section id="item-requirements" class="item-desc-content col-sm-12 col-md-6">
 							<h4>Graphs</h4>
@@ -218,31 +235,33 @@
 							<table id="pokemonspercity" class="display compact nowrap" width="100%">
 								<thead>
 									<tr>
-										<th>#</th>			<!-- 0 -->
-										<th>Pokemon</th>	<!-- 1 -->
-										<th>Region</th>		<!-- 2 -->
-										<th>Route</th>		<!-- 3 -->
-										<th>Min Lv</th>	<!-- 4 -->
-										<th>Max Lv</th>	<!-- 5 -->
-										<th>Min Exp</th>	<!-- 6 -->
-										<th>Max Exp</th>	<!-- 7 -->
-										<th>Min Team Exp</th>	<!-- 6 -->
-										<th>Max Team Exp</th>	<!-- 7 -->
+										<th>#</th>				<!-- 0 -->
+										<th>Pokemon</th>		<!-- 1 -->
+										<th>Type</th>			<!-- 2 -->
+										<th>Region</th>			<!-- 3 -->
+										<th>Route</th>			<!-- 4 -->
+										<th>Min Lv</th>			<!-- 5 -->
+										<th>Max Lv</th>			<!-- 6 -->
+										<th>Min Exp</th>		<!-- 7 -->
+										<th>Max Exp</th>		<!-- 8 -->
+										<th>Min Team Exp</th>	<!-- 9 -->
+										<th>Max Team Exp</th>	<!-- 10 -->
 									</tr>
 								</thead>
 								<tbody></tbody>
 								<tfoot>
 									<tr>
-										<th>#</th>			<!-- 0 -->
-										<th></th>	<!-- 1 -->
-										<th></th>		<!-- 2 -->
-										<th></th>		<!-- 3 -->
-										<th>Min Lv</th>	<!-- 4 -->
-										<th>Max Lv</th>	<!-- 5 -->
-										<th>Min Exp</th>	<!-- 6 -->
-										<th>Max Exp</th>	<!-- 7 -->
-										<th>Min Team Exp</th>	<!-- 6 -->
-										<th>Max Team Exp</th>	<!-- 7 -->
+										<th>#</th>				<!-- 0 -->
+										<th></th>				<!-- 1 -->
+										<th></th>				<!-- 2 -->
+										<th></th>				<!-- 3 -->
+										<th></th>				<!-- 4 -->
+										<th>Min Lv</th>			<!-- 5 -->
+										<th>Max Lv</th>			<!-- 6 -->
+										<th>Min Exp</th>		<!-- 7 -->
+										<th>Max Exp</th>		<!-- 8 -->
+										<th>Min Team Exp</th>	<!-- 9 -->
+										<th>Max Team Exp</th>	<!-- 10 -->
 									</tr>
 								</tfoot>
 							</table>
@@ -264,7 +283,6 @@
 										<th>Routes</th>		<!-- 10 -->
 										<th>Power</th>		<!-- 11 -->
 										<th>DPS</th>		<!-- 12 -->
-										<th>Details</th>	<!-- 13 -->
 									</tr>
 								</thead>
 								<tbody></tbody>
@@ -283,7 +301,6 @@
 										<th></th>		<!-- 10 -->
 										<th>Power</th>		<!-- 11 -->
 										<th>DPS</th>		<!-- 12 -->
-										<th>Details</th>	<!-- 13 -->
 									</tr>
 								</tfoot>
 							</table>
