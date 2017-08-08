@@ -771,8 +771,8 @@ $(document).ready(function() {
 function setCookiedex(pokemonclass) {
   console.log(pokemonclass);
   var cookiedex = getCookiedex() || [];
-  if (cookiedex.length >= 20) {
-    while (cookiedex.length >= 20)
+  if (cookiedex.length > 42) {
+    while (cookiedex.length > 42)
       cookiedex.shift();
   }
   /* remove empty poke */
