@@ -286,6 +286,7 @@ function searchToObject() {
 var searchObj = searchToObject();
 var filterableColumnNames = [
     "Pokemon",
+    "Type",
     "Region",
     "Route"];
 $(document).ready(function() {
@@ -315,7 +316,7 @@ $(document).ready(function() {
       { /* 1 (Col 2) */
         name: "Pokemon", data: "name" },
       { /* 1 (Col 2) */
-        name: "Type", data: "type" },
+        name: "Type", data: "type1" },
       { /* 2 (Col 3) */
         name: "Region", data: "region" },
       { /* 3 (Col 4) */
@@ -351,9 +352,9 @@ $(document).ready(function() {
       },
       {
         "aTargets": [2],
-        "mData": "type",
+        "mData": "type1",
         "mRender": function ( data, type, full ) {
-          return ' <span class="typebadge type'+data+'">'+data+'</span>';
+          return '<span class="typebadge type'+data+'">'+data+'</span>';
         }
       },
       /*{ 
@@ -381,7 +382,7 @@ $(document).ready(function() {
   yadcf.init(oTable, [/*
     {column_number : 0 },*/
     {column_number : 1, filter_type: 'select', filter_default_label: 'All Pokemon', filter_reset_button_text: false},
-    {column_number : 2, filter_type: 'select', filter_default_label: 'All Types', filter_reset_button_text: false},
+    {column_number : 2, filter_type: 'select', filter_default_label: 'All Types', column_data_type: 'rendered_html', filter_reset_button_text: false},
     {column_number : 3, filter_type: 'select', filter_default_label: 'All Region', filter_reset_button_text: false},
     {column_number : 4, filter_type: 'select', filter_default_label: 'All Route', filter_reset_button_text: false}
       ], {filters_position: "footer", filters_tr_index: 2});
@@ -403,12 +404,14 @@ $(document).ready(function() {
   }
 
   /* Update URL when filter selection */
-  $(document).on('change', 'select.yadcf-filter', function() { 
+  $(document).on('change', '#tc-pokemonspercity select.yadcf-filter', function() { 
     var colID = $(this).attr('id');
+    console.log(colID);
     colID = colID.replace('yadcf-filter--pokemonspercity-', '');
     var columns = oTable.settings().init().columns;
     var columnFilterName = columns[colID].name;
     var columnFilterVal = yadcf.exGetColumnFilterVal(oTable,colID);
+    console.log(columnFilterVal);
     updateURL(columnFilterName, columnFilterVal);
   });
 
@@ -610,9 +613,10 @@ $(document).ready(function() {
   });
 
   var filterableColumnNamesPD = [
-    "PD1",
-    "PD2",
-    "PD3"];
+    "Pokemon",
+    "Type",
+    "Evolution",
+    "Routes"];
   oTablePD = $('#pokedex').DataTable(); 
   yadcf.init(oTablePD, [/*
     {column_number : 0 },*/
@@ -634,12 +638,14 @@ $(document).ready(function() {
   }
 
   /* Update URL when filter selection */
-  $(document).on('change', 'select.yadcf-filter', function() { 
+  $(document).on('change', '#tc-pokedex select.yadcf-filter', function() { 
     var colID = $(this).attr('id');
+    console.log(colID);
     colID = colID.replace('yadcf-filter--pokedex-', '');
     var columns = oTablePD.settings().init().columns;
     var columnFilterName = columns[colID].name;
     var columnFilterVal = yadcf.exGetColumnFilterVal(oTablePD,colID);
+    console.log(columnFilterVal);
     updateURL(columnFilterName, columnFilterVal);
   });
 
