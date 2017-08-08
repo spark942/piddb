@@ -47,6 +47,9 @@ var formatPokemonArray = function() {
     var p_type2  = POKEDEX[pdt].stats[0]["types"][1];
     var p_bexp   = POKEDEX[pdt].exp[0]["base exp"];
     var p_image  = POKEDEX[pdt].images.normal.front;
+    var p_imageb  = POKEDEX[pdt].images.normal.back;
+    var p_simage  = POKEDEX[pdt].images.shiny.front;
+    var p_simageb  = POKEDEX[pdt].images.shiny.back;
     var p_id     = parseInt(pdt) +1;
     Pokemons[p_name] = {
       name      : p_name,
@@ -75,6 +78,9 @@ var formatPokemonArray = function() {
       type2     : p_type2 || '',
       bexp      : p_bexp,
       imgf      : p_image,
+      imgb      : p_imageb,
+      simgf     : p_simage,
+      simgb     : p_simageb,
       id        : p_id
     };
 
@@ -683,7 +689,9 @@ $(document).ready(function() {
   setPokemonRankings();
 
   var className = window.location.hash.substring(1);
-  openItemDesc(className);
+  console.log(className.length);
+  if (className.length > 0) 
+    openItemDesc(className);
 });
 
 
@@ -1413,12 +1421,25 @@ function printDescription(className) {
       console.log('found item', PokemonPokedex[i]);
       var descData = PokemonPokedex[i];
       var imgfsrc = descData.imgf.includes('http') ? descData.imgf : (meta.imgSource + descData.imgf);
+      var imgbsrc = descData.imgb.includes('http') ? descData.imgb : (meta.imgSource + descData.imgb);
+      var simgfsrc = descData.simgf.includes('http') ? descData.simgf : (meta.imgSource + descData.simgf);
+      var simgbsrc = descData.simgb.includes('http') ? descData.simgb : (meta.imgSource + descData.simgb);
       $('#item-image').attr('src', imgfsrc);
+      $('#item-image2').attr('src', imgbsrc);
+      $('#item-simage').attr('src', simgfsrc);
+      $('#item-simage2').attr('src', simgbsrc);
+
+
+      $('#item-number').html('#'+descData.id);
+
       var thisName = descData.name + ' <small>';
       if (descData.requiPremium == true)
         thisName += '<span class="premium">Premium</span> ';
-      thisName += '<span class="typebadge type'+descData.type1+'">'+descData.type1+'</span>' + '</small>'
       $('#item-name').html(thisName);
+
+      $('#item-type').removeClass();
+      $('#item-type').addClass('btn btn-default disabled type'+descData.type1);
+      $('#item-type').html(descData.type1);
 
       /* Pokemon Stats */
 
