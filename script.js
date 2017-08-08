@@ -720,8 +720,8 @@ $(document).ready(function() {
 
 function setCookiedex(pokemonclass) {
   var cookiedex = getCookiedex() || [];
-  if (cookiedex.length >= 10) {
-    while (cookiedex.length >= 10)
+  if (cookiedex.length >= 20) {
+    while (cookiedex.length >= 20)
       cookiedex.shift();
   }
   if (cookiedex.indexOf(pokemonclass) == -1 && pokemonclass.length)
