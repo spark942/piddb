@@ -739,7 +739,7 @@ function displayCookiedex() {
   console.log(cdex);
   var thtml = '';
   for (var i = cdex.length - 1; i >= 0; i--) {
-    thtml += '<a class="item-details-link" href="#'+cdex[i]+'">'+cdex[i].replace('_',' ')+'</a>';
+    thtml += '<a class="item-details-link" href="#'+cdex[i]+'"><span class="typebadge type'+Pokemons[cdex[i].replace('_',' ')].type1+'">'+Pokemons[cdex[i].replace('_',' ')].type1+'</span> '+cdex[i].replace('_',' ')+'</a>';
   };
   $('#cookiedex').html(thtml);
 }
