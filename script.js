@@ -1426,11 +1426,11 @@ function formatProperty(propertyType, propertyData, orientation, parentname) {
   /* End of the property */
   if (tHtml.length == 0)
     return tHtml;
-  if (orientation == 'vertical')
+  /*if (orientation == 'vertical')
     tHtml = '<dl class="item-property">' + tHtml;
   else
     tHtml = '<dl class="dl-horizontal item-property">' + tHtml;
-  tHtml += '</dl>';
+  tHtml += '</dl>';*/
   return tHtml;
 }
 function printDescription(className) {
