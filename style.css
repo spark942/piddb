@@ -359,6 +359,14 @@ a.tofilter {
 	font-size: 10px;
 }
 
+/* display hide search/clear filter button */
+.showfilter {
+	display: none;
+}
+.showfilter.curtable {
+	display: inherit;
+}
+
 /* display hide tables */
 
 .poketable {

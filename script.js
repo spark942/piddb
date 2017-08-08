@@ -368,9 +368,9 @@ $(document).ready(function() {
       $( "#loading-overlay" ).hide( "fast" );
 
       /* Set the search field if in URL */
-      if (searchObj['search']) {
-        setSearchVal(decodeURI(searchObj['search']));
-        this.api().search(decodeURI(searchObj['search'])).draw();
+      if (searchObj['searchppr']) {
+        setSearchVal(decodeURI(searchObj['searchppr']));
+        this.api().search(decodeURI(searchObj['searchppr'])).draw();
       }
       $.fn.dataTable.tables( {visible: true, api: true} ).columns.adjust();
     }
@@ -399,7 +399,6 @@ $(document).ready(function() {
         presetFilters.push([filterID, searchObj[filterName]]);
       }
     }
-    
     yadcf.exFilterColumn(oTable, presetFilters);
   }
 
@@ -416,16 +415,17 @@ $(document).ready(function() {
   /* Add a button to clear filters */
   $(document).on('click', 'button#clearf', function() { 
     yadcf.exResetAllFilters(oTable);
-    if (searchObj['search']) {
-      oTable.search(searchObj['search']).draw();
+    if (searchObj['searchppr']) {
+      oTable.search(searchObj['searchppr']).draw();
     }
 
     for (var i = 0; i < filterableColumnNames.length; i++) {
       updateURL(filterableColumnNames[i], '');
     };
     $('#searchdatalist').val("");
-    updateURL('search', $(this).val());
+    updateURL('searchppr', $(this).val());
   });
+
 
   /* *********************** *
    *  POKEDEX
@@ -622,6 +622,39 @@ $(document).ready(function() {
     {column_number : 10, text_data_delimiter: ",", filter_default_label: 'All Regions', filter_reset_button_text: false}
       ], {filters_position: "footer", filters_tr_index: 1});
 
+  if (searchObj) {
+    var presetFilters = [];
+    for (var filterName in searchObj){
+      if (filterableColumnNamesPD.indexOf(filterName) > -1) {
+        var filterID = oTablePD.column(filterName+':name').index();
+        presetFilters.push([filterID, searchObj[filterName]]);
+      }
+    }
+    yadcf.exFilterColumn(oTablePD, presetFilters);
+  }
+
+  /* Update URL when filter selection */
+  $(document).on('change', 'select.yadcf-filter', function() { 
+    var colID = $(this).attr('id');
+    colID = colID.replace('yadcf-filter--pokedex-', '');
+    var columns = oTablePD.settings().init().columns;
+    var columnFilterName = columns[colID].name;
+    var columnFilterVal = yadcf.exGetColumnFilterVal(oTablePD,colID);
+    updateURL(columnFilterName, columnFilterVal);
+  });
+
+  $(document).on('click', 'button#clearfpdex', function() { 
+    yadcf.exResetAllFilters(oTablePD);
+    if (searchObj['searchpdex']) {
+      oTablePD.search(searchObj['searchpdex']).draw();
+    }
+
+    for (var i = 0; i < filterableColumnNamesPD.length; i++) {
+      updateURL(filterableColumnNamesPD[i], '');
+    };
+    $('#searchpdexlist').val("");
+    updateURL('searchpdex', $(this).val());
+  });
 
 
   /* *********************** *
@@ -644,8 +677,13 @@ $(document).ready(function() {
   }
   $('#searchdatalist').on('input', function() {
     // add search filter
-    updateURL('search', $(this).val());
+    updateURL('searchppr', $(this).val());
     oTable.search($(this).val()).draw();
+  });
+  $('#searchpdexlist').on('input', function() {
+    // add search filter
+    updateURL('searchpdex', $(this).val());
+    oTablePD.search($(this).val()).draw();
   });
 
   var curTable = 'pokedex';
@@ -654,11 +692,16 @@ $(document).ready(function() {
     var showtable = $(this).attr('id').replace("menu", "");
     // remove selected menu class
     $(".showtable").removeClass("curtable");
+    // remove selected filter/searchbar class
+    $(".showfilter").removeClass("curtable");
     // remove current table class 
     $(".poketable").removeClass("curtable");
 
     // show selected menu
     $("#menu"+showtable).addClass( "curtable");
+    // show selected filter/searchbar
+    $("#sc-"+showtable).addClass( "curtable");
+    $("#fc-"+showtable).addClass( "curtable");
     // display current table
     $("#tc-"+showtable).addClass( "curtable");
     $.fn.dataTable.tables( {visible: true, api: true} ).columns.adjust();
