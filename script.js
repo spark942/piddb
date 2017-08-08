@@ -764,6 +764,8 @@ $(document).ready(function() {
   console.log(className.length);
   if (className.length > 0) 
     openItemDesc(className);
+
+  setCookiedex('');
 });
 
 function setCookiedex(pokemonclass) {
