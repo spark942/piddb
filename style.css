@@ -129,9 +129,14 @@ html,body { height: 100%; margin: 0px; padding: 0px; }
 
 #cookiebar {
 	background-color: #795548 !important;
+
 }
 #cookiebar > a {
 	color: #FFEB3B !important;
+}
+#cookiedex {
+	overflow-y: scroll;
+	max-height: calc(100vh - 480px);
 }
 #cookiedex,
 #cookiedex a {

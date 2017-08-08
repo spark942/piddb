@@ -764,31 +764,44 @@ $(document).ready(function() {
   console.log(className.length);
   if (className.length > 0) 
     openItemDesc(className);
-  displayCookiedex()
 });
 
 function setCookiedex(pokemonclass) {
+  console.log(pokemonclass);
   var cookiedex = getCookiedex() || [];
   if (cookiedex.length >= 20) {
     while (cookiedex.length >= 20)
       cookiedex.shift();
   }
-  if (cookiedex.indexOf(pokemonclass) == -1 && pokemonclass.length)
+  /* remove empty poke */
+  for (var i = 0; i < cookiedex.length; i++) {
+    if (cookiedex[i] == "") 
+      cookiedex[i] = "Bulbasaur";
+  };
+  console.log(cookiedex);
+  if (cookiedex.indexOf(pokemonclass) == -1 && pokemonclass.length > 2)
     cookiedex.push(pokemonclass);
+  console.log(cookiedex);
   var cookiestring = cookiedex.join();
+  console.log(cookiestring);
   setCookie('cookiedex',cookiestring, 60);
+  displayCookiedex(cookiedex);
 }
 
 function getCookiedex() {
   return getCookie('cookiedex').split(',');
 }
 
-function displayCookiedex() {
-  var cdex = getCookiedex();
-  console.log(cdex);
+function displayCookiedex(cdex) {
+  var cdex = cdex ;
+  if (!cdex.length) { 
+    return;
+  }
   var thtml = '';
   for (var i = cdex.length - 1; i >= 0; i--) {
-    thtml += '<a class="item-details-link" href="#'+cdex[i]+'"><span class="typebadge type'+Pokemons[cdex[i].replace('_',' ')].type1+'">'+Pokemons[cdex[i].replace('_',' ')].type1+'</span> '+cdex[i].replace('_',' ')+'</a>';
+    if (cdex[i].length > 2) {
+      thtml += '<a class="item-details-link" href="#'+cdex[i]+'"><span class="typebadge type'+Pokemons[cdex[i].replace('_',' ')].type1+'">'+Pokemons[cdex[i].replace('_',' ')].type1+'</span> '+cdex[i].replace('_',' ')+'</a>';
+    }
   };
   $('#cookiedex').html(thtml);
 }
@@ -1620,8 +1633,6 @@ function openItemDesc(className) {
   }
 
   setCookiedex(className);
-  /* Update Cookiedex */
-  displayCookiedex();
 };
 $(document).on('click', 'a.item-details-link', function(){
   var className = $(this).attr('href').substring(1);
