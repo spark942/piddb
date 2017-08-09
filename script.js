@@ -405,9 +405,6 @@ $(document).ready(function() {
       }*/
     ],
     initComplete: function(settings, json) {
-      /* Show the table after everything is loaded*/
-      $( "#loading-overlay" ).hide( "fast" );
-
       /* Set the search field if in URL */
       if (searchObj['searchppr']) {
         setSearchVal(decodeURI(searchObj['searchppr']));
@@ -772,6 +769,9 @@ $(document).ready(function() {
     initComplete: function(settings, json) {
       /* Show the table after everything is loaded*/
       $.fn.dataTable.tables( {visible: true, api: true} ).columns.adjust();
+
+      /* Show the table after everything is loaded*/
+      $( "#loading-overlay" ).hide( "fast" );
     }
   });
 
