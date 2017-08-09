@@ -139,7 +139,7 @@ html,body { height: 100%; margin: 0px; padding: 0px; }
 }
 #cookiedex {
 	overflow-y: scroll;
-	max-height: calc(100vh - 480px);
+	max-height: calc(100vh - 490px);
 }
 #cookiedex,
 #cookiedex a {
