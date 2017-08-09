@@ -782,7 +782,7 @@ $(document).ready(function() {
     {column_number : 0 },*/
     {column_number : 0, filter_type: 'select', filter_default_label: 'All Regions', filter_reset_button_text: false},
     {column_number : 1, filter_type: 'select', filter_default_label: 'All Routes', filter_reset_button_text: false},
-    {column_number : 4, text_data_delimiter: ",", filter_default_label: 'All Types', filter_reset_button_text: false}
+    {column_number : 4, filter_type: 'select', text_data_delimiter: ",", filter_default_label: 'All Types', filter_reset_button_text: false}
       ], {filters_position: "footer", filters_tr_index: 1});
 
 
@@ -856,6 +856,7 @@ $(document).ready(function() {
         presetFilters.push([filterID, thisFilter[filterName]]);
       }
     }
+    yadcf.exResetAllFilters(oTable);
     yadcf.exFilterColumn(oTable, presetFilters);
   });
   $(document).on('click', 'a.pokemonroute', function() { 
@@ -875,6 +876,7 @@ $(document).ready(function() {
         presetFilters.push([filterID, thisFilter[filterName]]);
       }
     }
+    yadcf.exResetAllFilters(oTable);
     yadcf.exFilterColumn(oTable, presetFilters);
   });
   $(document).on('click', 'a.typeandroute', function() { 
@@ -894,6 +896,7 @@ $(document).ready(function() {
         presetFilters.push([filterID, thisFilter[filterName]]);
       }
     }
+    yadcf.exResetAllFilters(oTable);
     yadcf.exFilterColumn(oTable, presetFilters);
   });
 
