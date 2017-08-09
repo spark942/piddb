@@ -833,12 +833,13 @@ $(document).ready(function() {
     $("#fc-"+showtable).addClass( "curtable");
     // display current table
     $("#tc-"+showtable).addClass( "curtable");
+    $( "#tablecontainer > div").animate({height: 'calc(100% - 200px) !important'}, 500);
+    $( "#tablecontainer > div").animate({height: '100% !important'}, 800);
     $.fn.dataTable.tables( {visible: true, api: true} ).columns.adjust();
-    $("table.pokemonspercity").resize();
-    $("table.pokedex").resize();
-    $("table.pokemap").resize();
+    //$("table.pokemonspercity").resize();
+    //$("table.pokedex").resize();
+    //$("table.pokemap").resize();
     $( "#item-description" ).hide( "slow" );
-    
   });
 
   $(document).on('click', 'a.pokemonregion', function() { 

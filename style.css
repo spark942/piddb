@@ -388,7 +388,7 @@ a.tofilter {
 	display: none;
 }
 .showfilter.curtable {
-	display: inherit;
+	display: inherit !important;
 }
 
 /* display hide tables */
@@ -399,7 +399,7 @@ a.tofilter {
 	background-color: white;
 }
 .poketable.curtable {
-	display: inherit;
+	display: inherit !important;
 }
 
 .pokedex-img {
