@@ -32,6 +32,8 @@ var PokemonPokedexRankingSpeedPerType = [];
 var PokemonPokedexRankingPowerPerType = [];
 var PokemonPokedexRankingDpsPerType = [];
 
+var MapRoutes = [];
+
 var formatPokemonArray = function() {
   for (pdt in POKEDEX) {
     var p_name   = POKEDEX[pdt].pokemon[0]["Pokemon"];
@@ -239,6 +241,36 @@ var buildPokeByCityData = function() {
 
 buildPokeByCityData();
 
+var formatMapRoutes = function() {
+  for (region in ROUTES) {
+    for (routename in ROUTES[region]) {
+      var thisRoute = {
+        region    : region,
+        routename : ROUTES[region][routename].name,
+        minLevel  : ROUTES[region][routename].minLevel,
+        maxLevel  : ROUTES[region][routename].maxLevel,
+        poketypes : {},
+        poketypenames : [],
+      };
+      for (var i = 0; i < ROUTES[region][routename].pokes.length; i++) {
+        var thisPoketype = Pokemons[ROUTES[region][routename].pokes[i]].type1;
+        if (thisRoute.poketypes.hasOwnProperty(thisPoketype)) {
+          thisRoute.poketypes[thisPoketype].pkm++;
+        } else {
+          thisRoute.poketypenames.push(thisPoketype);
+          thisRoute.poketypes[thisPoketype] = {
+            pkm : 1,
+          };
+          // if this is the only pokemon of the route, add his name
+          if (ROUTES[region][routename].pokes.length == 1) {
+            thisRoute.poketypes[thisPoketype].pkmname = Pokemons[ROUTES[region][routename].pokes[i]].name;
+          } 
+        }
+      }
+      MapRoutes.push(thisRoute);
+    }
+  }
+};
 
 
 /* update url */
@@ -390,7 +422,7 @@ $(document).ready(function() {
     {column_number : 1, filter_type: 'select', filter_default_label: 'All Pokemon', filter_reset_button_text: false},
     {column_number : 2, filter_type: 'select', filter_default_label: 'All Types', column_data_type: 'rendered_html', filter_reset_button_text: false},
     {column_number : 3, filter_type: 'select', filter_default_label: 'All Region', filter_reset_button_text: false},
-    {column_number : 4, filter_type: 'select', filter_default_label: 'All Route', filter_reset_button_text: false}
+    {column_number : 4, filter_type: 'select', filter_default_label: 'All Route', filter_match_mode: 'exact', filter_reset_button_text: false}
       ], {filters_position: "footer", filters_tr_index: 2});
   oTable.on( 'order.dt search.dt', function () {
     oTable.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
@@ -667,6 +699,91 @@ $(document).ready(function() {
     $('#searchpdexlist').val("");
     updateURL('searchpdex', $(this).val());
   });
+  
+  /* *********************** *
+   *  POKEMAP
+   * *********************** */
+  formatMapRoutes()
+  $('#pokemap').DataTable({
+    dom: '<"top">rt<"bottom"ip><"clear">',
+    hideEmptyCols: true,
+    lengthChange: true,
+    paging: true,
+    pageResize: true,
+    scrollX: true,
+    fixedColumns: {
+      leftColumns: 0,
+      rightColumns: 0,
+    },
+    data: MapRoutes,
+    columns: [
+      { /* 0 (Col 1) */
+        name: "Region", data: "region", className: 'theader' },
+      { /* 1 (Col 2) */
+        name: "Route", data: "routename" },
+      { /* 2 (Col 3) */
+        name: "Min Level", data: "minLevel", className: 'num'
+      },
+      { /* 3 (Col 4) */
+        name: "Max Level", data: "maxLevel", className: 'num'
+      },
+      { /* 4 (Col 5) */
+        name: "Pokémon Types", data: "poketypenames",
+      },
+    ], /*
+    order: [[ 0, 'asc' ]],*/
+    aoColumnDefs: [
+      {
+        "aTargets": [1],
+        "mData": "routename",
+        "mRender": function ( data, type, full ) {
+          return '<a class="pokemonroute" href="#" data-region="'+full.region+'" data-route="'+data+'">'+data+'</a>'
+        }
+      },
+      {
+        "aTargets": [4],
+        "mData": "poketypenames",
+        "mRender": function ( data, type, full ) {
+          var text = '';
+          if (full.poketypes && typeof full.poketypes === 'object') {
+            var keyn = 0;
+            for (type in full.poketypes) {
+              if (keyn > 0)
+                text += ' ';
+              /* show pokemon name if the only pokemon of the route */
+              if (Object.keys(full.poketypes).length == 1 && full.poketypes[type].pkm == 1) {
+                text += '<a class="typeandroute" href="#" data-type="'+type+'" data-route="'+full.routename+'">';
+                text += '<span class="routetypepkm typebadge type'+type+'" data-pkmname="'+full.poketypes[type].pkmname+'">'+type+'</span></a>';
+              } else {
+                text += '<a class="typeandroute" href="#" data-type="'+type+'" data-route="'+full.routename+'">';
+                text += '<span class="routetype typebadge type'+type+'" data-typeamount="'+full.poketypes[type].pkm+'">'+type+'</span></a>';
+              }
+              keyn++;
+            }
+            return text;
+          } else {
+            return '';
+          }
+        }
+      },
+    ],
+    initComplete: function(settings, json) {
+      /* Show the table after everything is loaded*/
+      $.fn.dataTable.tables( {visible: true, api: true} ).columns.adjust();
+    }
+  });
+
+  var filterableColumnNamesPM = [
+    "Region",
+    "Route",
+    "Pokémon Types"];
+  oTablePM = $('#pokemap').DataTable(); 
+  yadcf.init(oTablePM, [/*
+    {column_number : 0 },*/
+    {column_number : 0, filter_type: 'select', filter_default_label: 'All Regions', filter_reset_button_text: false},
+    {column_number : 1, filter_type: 'select', filter_default_label: 'All Routes', filter_reset_button_text: false},
+    {column_number : 4, text_data_delimiter: ",", filter_default_label: 'All Types', filter_reset_button_text: false}
+      ], {filters_position: "footer", filters_tr_index: 1});
 
 
   /* *********************** *
@@ -749,6 +866,25 @@ $(document).ready(function() {
 
     var thisFilter = {
       Region: thisRegion,
+      Route: thisRoute
+    }
+    var presetFilters = [];
+    for (var filterName in thisFilter){
+      if (filterableColumnNames.indexOf(filterName) > -1) {
+        var filterID = oTable.column(filterName+':name').index();
+        presetFilters.push([filterID, thisFilter[filterName]]);
+      }
+    }
+    yadcf.exFilterColumn(oTable, presetFilters);
+  });
+  $(document).on('click', 'a.typeandroute', function() { 
+    var thisType = $(this).attr('data-type');
+    var thisRoute = $(this).attr('data-route');
+    $( "#item-description" ).hide( "slow" );
+    $( "#menupokemonspercity" ).trigger( "click" );
+
+    var thisFilter = {
+      Type: thisType,
       Route: thisRoute
     }
     var presetFilters = [];

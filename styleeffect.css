@@ -127,3 +127,32 @@
 	80% {opacity: 0.0}
 	100% { left: 82%}
 }
+
+
+.routetypepkm:after {
+    -webkit-animation: routetypepkmcolor 2s infinite alternate;
+	-moz-animation: routetypepkmcolor 2s infinite alternate;
+	-ms-animation: routetypepkmcolor 2s infinite alternate;
+	-o-animation: routetypepkmcolor 2s infinite alternate;
+	animation: routetypepkmcolor 2s infinite alternate;
+}
+@-webkit-keyframes routetypepkmcolor {
+	from { color: #ecf0f1; }
+	to { color: #000; }
+}
+@-moz-keyframes routetypepkmcolor {
+	from { color: #ecf0f1; }
+	to { color: #000; }
+}
+@-ms-keyframes routetypepkmcolor {
+	from { color: #ecf0f1; }
+	to { color: #000; }
+}
+@-o-keyframes routetypepkmcolor {
+	from { color: #ecf0f1; }
+	to { color: #000; }
+}
+@keyframes routetypepkmcolor {
+	from { color: #ecf0f1; }
+	to { color: #000; }
+}

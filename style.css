@@ -422,6 +422,13 @@ a.tofilter {
 .evolfrom {
 	font-size: 9px;
 }
+.routetype:after {
+    content: ' (' attr(data-typeamount) ')';
+}
+.routetypepkm:after {
+    content: ' (' attr(data-pkmname) ')';
+}
+
 
 .rankBest { background-color : #34495e; color: #ecf0f1; padding: 0 3px; border-radius: 3px;}
 .rankGreat { color : #3498db; }
