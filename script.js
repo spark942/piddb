@@ -863,10 +863,10 @@ $(document).ready(function() {
   });
   $(document).on('click', 'a.pokemonroute', function() { 
     var thisRegion = $(this).attr('data-region');
-    var thisRoute = $(this).attr('data-route');
+    var thisRoute = $(this).attr('data-route').replace('(','\\(').replace(')','\\)');
     $( "#item-description" ).hide( "slow" );
     $( "#menupokemonspercity" ).trigger( "click" );
-
+    console.log(thisRoute);
     var thisFilter = {
       Region: thisRegion,
       Route: thisRoute
@@ -883,10 +883,10 @@ $(document).ready(function() {
   });
   $(document).on('click', 'a.typeandroute', function() { 
     var thisType = $(this).attr('data-type');
-    var thisRoute = $(this).attr('data-route');
+    var thisRoute = $(this).attr('data-route').replace('(','\\(').replace(')','\\)');
     $( "#item-description" ).hide( "slow" );
     $( "#menupokemonspercity" ).trigger( "click" );
-
+    console.log(thisRoute);
     var thisFilter = {
       Type: thisType,
       Route: thisRoute
