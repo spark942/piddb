@@ -13,6 +13,10 @@ const statHp = (rawHp, level) => {
   return Math.floor(((rawHp * level) / 40))
 }
 
+const formatNumber = (number, min, max) => {
+  return number.toLocaleString('en-US', {minimumFractionDigits: min,maximumFractionDigits: max});
+}
+
 var Pokemons = {};
 var PokemonPokedex = [];
 var PokemonFamily = [];
@@ -124,12 +128,10 @@ var formatPokemonFamily = function() {
       } else {
         for (fam in PokemonFamily[i]) {
           if (PokemonFamily[i][fam].evolution == poke) {
-            //console.log(PokemonFamily[i][fam], " : " + PokemonFamily[i][fam].evolution + " ==> " + poke + " ||| ", Pokemons[poke]);
             PokemonFamily[i][poke] = Pokemons[poke];
             exists = true;
           }
           if (PokemonFamily[i][fam].evolfrom == poke) {
-            console.log(PokemonFamily[i][fam], " : " + PokemonFamily[i][fam].evolfrom + " ==> " + poke + " ||| ", Pokemons[poke]);
             PokemonFamily[i][poke] = Pokemons[poke];
             exists = true;
           }
@@ -906,7 +908,6 @@ $(document).ready(function() {
   setPokemonRankings();
 
   var className = window.location.hash.substring(1);
-  console.log(className.length);
   if (className.length > 0) 
     openItemDesc(className);
 
@@ -914,7 +915,6 @@ $(document).ready(function() {
 });
 
 function setCookiedex(pokemonclass) {
-  console.log(pokemonclass);
   var cookiedex = getCookiedex() || [];
   if (cookiedex.length > 42) {
     while (cookiedex.length > 42)
@@ -925,14 +925,11 @@ function setCookiedex(pokemonclass) {
     if (cookiedex[i] == "") 
       cookiedex[i] = "Bulbasaur";
   };
-  console.log(cookiedex);
   if (cookiedex.indexOf(pokemonclass) != -1)
     cookiedex = removeA(cookiedex, pokemonclass);
   if (cookiedex.indexOf(pokemonclass) == -1 && pokemonclass.length > 2)
     cookiedex.push(pokemonclass);
-  console.log(cookiedex);
   var cookiestring = cookiedex.join();
-  console.log(cookiestring);
   setCookie('cookiedex',cookiestring, 60);
   displayCookiedex(cookiedex);
 }
@@ -1725,6 +1722,21 @@ function printDescription(className) {
       $('#item-type').removeClass();
       $('#item-type').addClass('btn btn-default disabled type'+descData.type1);
       $('#item-type').html(descData.type1);
+
+      /* Pokemon Catch Rate */
+      $('.catchrateballs').removeClass('hide');
+      if (descData.hasOwnProperty('routes')) {
+        var catchrateball = descData.catch/3;
+        var pokeballrate = catchrateball < 100 ? catchrateball : 100;
+        var superballrate = catchrateball*1.5 < 100 ? catchrateball*1.5 : 100;
+        var ultraballrate = catchrateball*2 < 100 ? catchrateball*2 : 100;
+        $('#pkbcr').html(formatNumber(pokeballrate,0,2)+'%');
+        $('#spbcr').html(formatNumber(superballrate,0,2)+'%');
+        $('#utbcr').html(formatNumber(ultraballrate,0,2)+'%');
+      } else {
+        $('.catchrateballs').addClass('hide');
+      }
+      
 
       /* Pokemon Type Modifier */
       $('#item-typemod').html(descData.type1);

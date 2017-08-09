@@ -250,6 +250,13 @@ a.tofilter {
 /****************
  *** Item Description
  ****************/
+#item-close {
+	position: absolute;
+	right: 10px;
+	top: -10px;
+	z-index: 100;
+	cursor: pointer;
+}
 #item-description {
 	display: none;
 	margin-bottom: 20px;
@@ -305,6 +312,15 @@ a.tofilter {
 #sitem-image2 {
 	max-height: 96px;
 	max-width: 96px;
+}
+#item-head .btn-group {
+	margin-bottom: 4px;
+}
+.catchrateballs {
+	width: 270px;
+}
+.catchrateballs button {
+	padding: 4px 6px;
 }
 .item-properties .dl-horizontal dt {
 	width: 140px;
@@ -443,4 +459,8 @@ a.tofilter {
 .typemodifiers .btn-group {
 	margin-bottom:3px;
 	margin-right:3px;
+}
+
+.hide {
+	display: none;
 }
