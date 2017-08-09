@@ -464,3 +464,7 @@ a.tofilter {
 .hide {
 	display: none;
 }
+.DTFC_LeftWrapper,
+.DTFC_RightWrapper {
+	opacity: 0;
+}

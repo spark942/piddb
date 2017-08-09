@@ -769,7 +769,6 @@ $(document).ready(function() {
     initComplete: function(settings, json) {
       /* Show the table after everything is loaded*/
       $.fn.dataTable.tables( {visible: true, api: true} ).columns.adjust();
-
       /* Show the table after everything is loaded*/
       $( "#loading-overlay" ).hide( "fast" );
     }
@@ -827,7 +826,6 @@ $(document).ready(function() {
     $(".showfilter").removeClass("curtable");
     // remove current table class 
     $(".poketable").removeClass("curtable");
-    $.fn.dataTable.tables( {visible: true, api: true} ).columns.adjust();
     // show selected menu
     $("#menu"+showtable).addClass( "curtable");
     // show selected filter/searchbar
@@ -835,8 +833,10 @@ $(document).ready(function() {
     $("#fc-"+showtable).addClass( "curtable");
     // display current table
     $("#tc-"+showtable).addClass( "curtable");
+    $.fn.dataTable.tables( {visible: true, api: true} ).columns.adjust();
     $("table.pokemonspercity").resize();
     $("table.pokedex").resize();
+    $("table.pokemap").resize();
     $( "#item-description" ).hide( "slow" );
     
   });
