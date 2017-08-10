@@ -10,7 +10,7 @@ const statValue = (raw, level) => {
   return Math.floor((((raw + 50) * level) / (150)))
 }
 const statHp = (rawHp, level) => {
-  return Math.floor(((rawHp * level) / 40))
+  return Math.floor(((rawHp * level) / 40) * 3)
 }
 
 const formatNumber = (number, min, max) => {
@@ -146,7 +146,7 @@ var formatPokemonFamily = function() {
   }
 }
 
-var formatPokemonCity = function(name, type, region, routename, min, max) {
+var formatPokemonCity = function(name, type, region, routename, min, max, catchrate) {
   var PokemonCity = {
     name   : name,
     className   : name.replace(' ','_'),
@@ -164,6 +164,7 @@ var formatPokemonCity = function(name, type, region, routename, min, max) {
     expteammax : ((Pokemons[name].bexp / 100) + (max / 10)).toFixed(3),
     region : region,
     route  : routename,
+    catch  : catchrate,
   };
 
   /* Add route to pokedex pokemon */
@@ -235,7 +236,8 @@ var buildPokeByCityData = function() {
       for(var i = 0; i < ROUTES[region][city].pokes.length; i++){
         var pc_name = ROUTES[region][city].pokes[i];
         var pc_type = Pokemons[pc_name].type1;
-        PokemonsPerCity.push(formatPokemonCity(pc_name, pc_type, pc_region, pc_routename, pc_minlv, pc_maxlv));
+        var pc_catch = Pokemons[pc_name].catch;
+        PokemonsPerCity.push(formatPokemonCity(pc_name, pc_type, pc_region, pc_routename, pc_minlv, pc_maxlv, pc_catch));
       }
     }
   }
@@ -342,6 +344,7 @@ $(document).ready(function() {
     scrollX: true,
     fixedColumns: {
       leftColumns: 1,
+      rightColumns: 1,
     },
     data: PokemonsPerCity,
     columns: [
@@ -355,30 +358,33 @@ $(document).ready(function() {
       },
       { /* 1 (Col 2) */
         name: "Pokemon", data: "name" },
-      { /* 1 (Col 2) */
+      { /* 2 (Col 2) */
         name: "Type", data: "type1" },
-      { /* 2 (Col 3) */
+      { /* 3 (Col 3) */
         name: "Region", data: "region" },
-      { /* 3 (Col 4) */
+      { /* 4 (Col 4) */
         name: "Route", data: "route",
       },
-      { /* 4 (Col 5) */
+      { /* 5 (Col 5) */
         name: "Min Level", data: "lvmin", className: 'num',
       },
-      { /* 4 (Col 5) */
+      { /* 6 (Col 5) */
         name: "Max Level", data: "lvmax", className: 'num',
       },
-      { /* 5 (Col 6) */
+      { /* 7 (Col 6) */
         name: "Min Exp", data: "expmin", className: 'num', render: $.fn.dataTable.render.number( ',', '.', 0, '', 'EXP')
       },
-      { /* 6 (Col 7) */
+      { /* 8 (Col 7) */
         name: "Max Exp", data: "expmax", className: 'num', render: $.fn.dataTable.render.number( ',', '.', 0, '', 'EXP')
       },
-      { /* 7 (Col 8) */
+      { /* 9 (Col 8) */
         name: "Min Team Exp", data: "expteammin", className: 'num', render: $.fn.dataTable.render.number( ',', '.', 0, '', 'EXP')
       },
-      { /* 8 (Col 9) */
+      { /* 10 (Col 9) */
         name: "Max Team Exp", data: "expteammax", className: 'num', render: $.fn.dataTable.render.number( ',', '.', 0, '', 'EXP')
+      },
+      { /* 11 (Col 9) */
+        name: "Catch", data: "catch", className: 'num',
       },
     ], 
     order: [[ 7, 'desc' ], [ 5, 'desc' ]],
@@ -395,6 +401,19 @@ $(document).ready(function() {
         "mData": "type1",
         "mRender": function ( data, type, full ) {
           return '<span class="typebadge type'+data+'">'+data+'</span>';
+        }
+      },
+      {
+        "aTargets": [11],
+        "mData": "catch",
+        "mRender": function ( data, type, full ) {
+          var catchrate = '';
+          catchrate = (parseInt(data)/3).toLocaleString('en-US', {
+              minimumFractionDigits: 1,
+              maximumFractionDigits: 2
+          }) + "%";
+
+          return catchrate;
         }
       },
       /*{ 
@@ -492,6 +511,9 @@ $(document).ready(function() {
         name: "Type", data: "type1"
       },
       { /* 3 (Col 4) */
+        name: "HP", data: "hplv100", className: 'num'
+      },
+      { /* 3 (Col 4) */
         name: "ATK", data: "atklv100", className: 'num'
       },
       { /* 4 (Col 5) */
@@ -540,7 +562,7 @@ $(document).ready(function() {
       },
       {
         "aTargets": [3],
-        "mData": "atklv100",
+        "mData": "hplv100",
         "mRender": function ( data, type, full ) {
           return data.toLocaleString('en-US', {
               minimumFractionDigits: 0,
@@ -550,7 +572,7 @@ $(document).ready(function() {
       },
       {
         "aTargets": [4],
-        "mData": "deflv100",
+        "mData": "atklv100",
         "mRender": function ( data, type, full ) {
           return data.toLocaleString('en-US', {
               minimumFractionDigits: 0,
@@ -560,6 +582,16 @@ $(document).ready(function() {
       },
       {
         "aTargets": [5],
+        "mData": "deflv100",
+        "mRender": function ( data, type, full ) {
+          return data.toLocaleString('en-US', {
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0
+          });
+        }
+      },
+      {
+        "aTargets": [6],
         "mData": "speedlv100",
         "mRender": function ( data, type, full ) {
           return (data > 0.3 ? data : 0.3).toLocaleString('en-US', {
@@ -569,7 +601,7 @@ $(document).ready(function() {
         }
       },
       {
-        "aTargets": [7],
+        "aTargets": [8],
         "mData": "catch",
         "mRender": function ( data, type, full ) {
           var catchrate = '';
@@ -583,7 +615,7 @@ $(document).ready(function() {
         }
       },
       {
-        "aTargets": [9],
+        "aTargets": [10],
         "mData": "evolution",
         "mRender": function ( data, type, full ) {
           if (data) {
@@ -598,7 +630,7 @@ $(document).ready(function() {
         }
       },
       {
-        "aTargets": [10],
+        "aTargets": [11],
         "mData": "routenames",
         "mRender": function ( data, type, full ) {
           var text = '';
@@ -617,7 +649,7 @@ $(document).ready(function() {
         }
       },
       {
-        "aTargets": [11],
+        "aTargets": [12],
         "mData": "powerlv100",
         "mRender": function ( data, type, full ) {
           return data.toLocaleString('en-US', {
@@ -627,7 +659,7 @@ $(document).ready(function() {
         }
       },
       {
-        "aTargets": [12],
+        "aTargets": [13],
         "mData": "dpslv100",
         "mRender": function ( data, type, full ) {
           return data.toLocaleString('en-US', {
@@ -659,8 +691,8 @@ $(document).ready(function() {
     {column_number : 0 },*/
     {column_number : 1, filter_type: 'select', filter_default_label: 'All Pokémons', filter_reset_button_text: false},
     {column_number : 2, filter_type: 'select', filter_default_label: 'All Types', filter_reset_button_text: false},
-    {column_number : 9, filter_type: 'select', filter_default_label: 'Pokémons', filter_reset_button_text: false},
-    {column_number : 10, text_data_delimiter: ",", filter_default_label: 'All Regions', filter_reset_button_text: false}
+    {column_number : 10, filter_type: 'select', filter_default_label: 'Pokémons', filter_reset_button_text: false},
+    {column_number : 11, text_data_delimiter: ",", filter_default_label: 'All Regions', filter_reset_button_text: false}
       ], {filters_position: "footer", filters_tr_index: 1});
 
   if (searchObj) {
@@ -712,7 +744,7 @@ $(document).ready(function() {
     scrollX: true,
     fixedColumns: {
       leftColumns: 0,
-      rightColumns: 0,
+      rightColumns: 1,
     },
     data: MapRoutes,
     columns: [
@@ -728,6 +760,9 @@ $(document).ready(function() {
       },
       { /* 4 (Col 5) */
         name: "Pokémon Types", data: "poketypenames",
+      },
+      { /* 4 (Col 5) */
+        name: "Pokémons", data: "poketypenames",
       },
     ], /*
     order: [[ 0, 'asc' ]],*/
@@ -762,6 +797,23 @@ $(document).ready(function() {
             return text;
           } else {
             return '';
+          }
+        }
+      },
+      {
+        "aTargets": [5],
+        "mData": "poketypenames",
+        "mRender": function ( data, type, full ) {
+          if (full.poketypes && typeof full.poketypes === 'object') {
+            var keyn = 0;
+            var rn = 0;
+            for (type in full.poketypes) {
+                rn += parseInt(full.poketypes[type].pkm);
+              keyn++;
+            }
+            return rn;
+          } else {
+            return '0';
           }
         }
       },
