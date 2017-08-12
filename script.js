@@ -1042,6 +1042,26 @@ function formatProperty(propertyType, propertyData, orientation, parentname) {
       }
     }
   }
+  if (propertyType == 'deftypemodstrong' && propertyData) {
+    for (defpoke in TYPES) {
+      if (TYPES[defpoke][propertyData.type1] > 1) {
+        tHtml += '<div class="btn-group" role="group" aria-label="poketypemod">';
+        tHtml += '<button id="item-type" type="button" class="btn btn-default btn-xs disabled type'+defpoke+'">'+defpoke+'</button>';
+        tHtml += '<button type="button" class="btn btn-default btn-xs disabled">x'+TYPES[defpoke][propertyData.type1]+'</button>';
+        tHtml += '</div>';
+      }
+    }
+  }
+  if (propertyType == 'deftypemodweak' && propertyData) {
+    for (defpoke in TYPES) {
+      if (TYPES[defpoke][propertyData.type1] < 1) {
+        tHtml += '<div class="btn-group" role="group" aria-label="poketypemod">';
+        tHtml += '<button id="item-type" type="button" class="btn btn-default btn-xs disabled type'+defpoke+'">'+defpoke+'</button>';
+        tHtml += '<button type="button" class="btn btn-default btn-xs disabled">x'+TYPES[defpoke][propertyData.type1]+'</button>';
+        tHtml += '</div>';
+      }
+    }
+  }
 
   if (propertyType == 'stats' && propertyData) {
     var cellb = '<td>';
@@ -1795,6 +1815,8 @@ function printDescription(className) {
       $('#item-typemod').html(descData.type1);
       $('#item-typemod-strong').html(formatProperty('typemodstrong', descData));
       $('#item-typemod-weak').html(formatProperty('typemodweak', descData));
+      $('#item-def-typemod-strong').html(formatProperty('deftypemodstrong', descData));
+      $('#item-def-typemod-weak').html(formatProperty('deftypemodweak', descData));
 
       /* Pokemon Stats */
 
