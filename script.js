@@ -199,7 +199,7 @@ var setPokemonRankings = function() {
   PokemonPokedexRankingHp = sortByAttribute(PokemonPokedex, '-hplv100');
   PokemonPokedexRankingAtk = sortByAttribute(PokemonPokedex, '-atklv100');
   PokemonPokedexRankingDef = sortByAttribute(PokemonPokedex, '-deflv100');
-  PokemonPokedexRankingSpeed = sortByAttribute(PokemonPokedex, 'hardcappedspeedlv100');
+  PokemonPokedexRankingSpeed = sortByAttribute(PokemonPokedex, 'speedlv100');
   PokemonPokedexRankingPower = sortByAttribute(PokemonPokedex, '-powerlv100');
   PokemonPokedexRankingDps = sortByAttribute(PokemonPokedex, '-dpslv100');
 
@@ -217,7 +217,7 @@ var setPokemonRankings = function() {
     PokemonPokedexRankingHpPerType[ttr] = sortByAttribute(PokemonPokedexPerType[ttr], '-hplv100');
     PokemonPokedexRankingAtkPerType[ttr] = sortByAttribute(PokemonPokedexPerType[ttr], '-atklv100');
     PokemonPokedexRankingDefPerType[ttr] = sortByAttribute(PokemonPokedexPerType[ttr], '-deflv100');
-    PokemonPokedexRankingSpeedPerType[ttr] = sortByAttribute(PokemonPokedexPerType[ttr], 'hardcappedspeedlv100');
+    PokemonPokedexRankingSpeedPerType[ttr] = sortByAttribute(PokemonPokedexPerType[ttr], 'speedlv100');
     PokemonPokedexRankingPowerPerType[ttr] = sortByAttribute(PokemonPokedexPerType[ttr], '-powerlv100');
     PokemonPokedexRankingDpsPerType[ttr] = sortByAttribute(PokemonPokedexPerType[ttr], '-dpslv100');
   }
