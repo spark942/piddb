@@ -503,7 +503,6 @@ a.tofilter {
 	font-weight: bold;
 }
 .typemodifiers button {
-	font-weight: bold;
 	text-shadow: none;
 }
 .typemodifiers button:hover,
@@ -515,6 +514,7 @@ a.tofilter {
 }
 .grouptypemod button {
 	cursor: inherit !important;
+	font-weight: bold;
 }
 .hide {
 	display: none;
