@@ -287,7 +287,6 @@ var formatMapRoutes = function() {
   }
 };
 
-
 /* update url */
 function updateUrlParameter(uri, key, value) {
   // remove the hash part before operating on the uri
@@ -853,6 +852,11 @@ $(document).ready(function() {
   /* *********************** *
    *  GENERAL
    * *********************** */
+
+  /* Format double types */
+  /* De-comment only to generate json to update typeModifiersDealt.js and typeModifiersTaken.js*/
+  //formatSimpleDoubleTypeModifiers(formatSimpleDoubleTypeModifiersByModDealt);
+  //formatSimpleDoubleTypeModifiers(formatSimpleDoubleTypeModifiersByModTaken);
 
   $(document).on('click', 'a.tofilter', function() { 
     var searchval = $(this).text();
