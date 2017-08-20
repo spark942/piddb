@@ -743,7 +743,7 @@ $(document).ready(function() {
     for (var i = 0; i < filterableColumnNamesPD.length; i++) {
       updateURL(filterableColumnNamesPD[i], '');
     };
-    $('#searchpdexlist').val("");
+    $('#searchpdexlist').val(" ");
     updateURL('searchpdex', $(this).val());
   });
   
