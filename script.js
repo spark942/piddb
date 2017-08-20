@@ -410,6 +410,9 @@ $(document).ready(function() {
         "aTargets": [2],
         "mData": "type1",
         "mRender": function ( data, type, full ) {
+          if (full.type2.length > 0) {
+            return '<span class="typebadge type'+data+'">'+data+'</span> <span class="typebadge type'+full.type2+'">'+full.type2+'</span>';
+          }
           return '<span class="typebadge type'+data+'">'+data+'</span>';
         }
       },
@@ -448,7 +451,7 @@ $(document).ready(function() {
   yadcf.init(oTable, [/*
     {column_number : 0 },*/
     {column_number : 1, filter_type: 'select', filter_default_label: 'All Pokemon', filter_reset_button_text: false},
-    {column_number : 2, filter_type: 'select', filter_default_label: 'All Types', column_data_type: 'rendered_html', filter_reset_button_text: false},
+    {column_number : 2, filter_type: 'select', text_data_delimiter: ",", filter_default_label: 'All Types', filter_reset_button_text: false},
     {column_number : 3, filter_type: 'select', filter_default_label: 'All Region', filter_reset_button_text: false},
     {column_number : 4, filter_type: 'select', filter_default_label: 'All Route', filter_match_mode: 'exact', filter_reset_button_text: false}
       ], {filters_position: "footer", filters_tr_index: 2});
