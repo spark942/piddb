@@ -282,6 +282,18 @@ a.tofilter {
 #item-description button:active {
 	text-shadow: none;
 }
+
+#item-description #item-pkm-prev,
+#item-description #item-pkm-next {
+	cursor: pointer;
+}
+#item-description #item-pkm-prev button,
+#item-description #item-pkm-next button {
+	cursor: inherit !important;
+	text-shadow: none;
+	/*font-weight: bold;*/
+}
+
 .imgplaceholder {
 	width: 102px;
     height: 102px;

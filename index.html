@@ -120,17 +120,24 @@
 						<section class="item-desc-header col-sm-12 col-md-12" class="media">
 							<div class="row">
 								<h4 id="item-close"><a class="item-details-close">Close<br>(Esc)</a></h4>
+								<!-- Previous and Next Pokemon on National Pokedex -->
 								<div id="item-head" class="col-sm-12 col-md-12 col-lg-12">
-									<div class="btn-group" role="group" aria-label="poketype">
-										<button type="button" class="btn btn-default disabled">Number</button>
-										<button id="item-number" type="button" class="btn btn-default disabled">{number}</button>
+									<div id="item-pkm-prev" class="btn-group" role="group" aria-label="pokename">
+										<button type="button" class="btn btn-default disabled">←</button>
+										<button id="item-number-prev" type="button" class="btn btn-default disabled">{number}</button>
+										<button id="item-name-prev" type="button" class="btn btn-default disabled">{name}</button>
 									</div>
-
 									<div class="btn-group" role="group" aria-label="poketype">
-										<button type="button" class="btn btn-default disabled">Name</button>
+										<button id="item-number" type="button" class="btn btn-default disabled">{number}</button>
 										<button id="item-name" type="button" class="btn btn-default disabled">{name}</button>
 									</div>
-
+									<div id="item-pkm-next" class="btn-group" role="group" aria-label="pokename">
+										<button id="item-number-next" type="button" class="btn btn-default disabled">{number}</button>
+										<button id="item-name-next" type="button" class="btn btn-default disabled">{name}</button>
+										<button type="button" class="btn btn-default disabled">→</button>
+									</div>
+								</div>
+								<div id="item-head" class="col-sm-12 col-md-12 col-lg-12">
 									<div class="btn-group" role="group" aria-label="poketype">
 										<button type="button" class="btn btn-default disabled">Type</button>
 										<button id="item-type" type="button" class="btn btn-default disabled">{type}</button>

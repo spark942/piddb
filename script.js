@@ -1751,7 +1751,7 @@ function formatProperty(propertyType, propertyData, orientation, parentname) {
       }
 
       tHtml += '<tr>';
-      tHtml += cellb+propertyData[poke].id+cella;
+      tHtml += cellb+(propertyData[poke].id.toString()).padStart(3, '0')+cella;
       if (parentname != propertyData[poke].name)
         tHtml += cellb+'<a class="item-details-link" href="#'+propertyData[poke].className+'">'+propertyData[poke].name+'</a>'+cella;
       else
@@ -1841,12 +1841,34 @@ function printDescription(className) {
       $('#item-simage').attr('src', simgfsrc);
       $('#item-simage2').attr('src', simgbsrc);
 
+      /* PREVIOUS AND NEXT POKEMON */
+      $('#item-pkm-prev').removeClass();
+      $('#item-pkm-next').removeClass();
+      if (typeof PokemonPokedex[i-1] !== 'undefined') {
+        var prevPKM = PokemonPokedex[i-1];
+        $('#item-number-prev').html('#'+(prevPKM.id.toString()).padStart(3, '0'));
+        $('#item-name-prev').html(prevPKM.name);
+        $('#item-pkm-prev').addClass('btn-group');
+        $('#item-pkm-prev').attr('data-classname', prevPKM.className);
+      } else {
+        console.log('no prev pkm');
+        $('#item-pkm-prev').addClass('hide');
+      }
+      if (typeof PokemonPokedex[i+1] !== 'undefined') {
+        var nextPKM = PokemonPokedex[i+1];
+        $('#item-number-next').html('#'+(nextPKM.id.toString()).padStart(3, '0'));
+        $('#item-name-next').html(nextPKM.name);
+        $('#item-pkm-next').addClass('btn-group');
+        $('#item-pkm-next').attr('data-classname', nextPKM.className);
+      } else {
+        $('#item-pkm-next').addClass('hide');
+      }
+      
 
-      $('#item-number').html('#'+descData.id);
+      /* CURRENT POKEMON */
+      $('#item-number').html('#'+(descData.id.toString()).padStart(3, '0'));
 
-      var thisName = descData.name + ' <small>';
-      if (descData.requiPremium == true)
-        thisName += '<span class="premium">Premium</span> ';
+      var thisName = descData.name;
       $('#item-name').html(thisName);
 
       $('#item-type').removeClass();
@@ -1938,6 +1960,14 @@ function openItemDesc(className) {
 };
 $(document).on('click', 'a.item-details-link', function(){
   var className = $(this).attr('href').substring(1);
+  openItemDesc(className);
+});
+$(document).on('click', 'div#item-pkm-prev', function(){
+  var className = $(this).attr('data-classname');
+  openItemDesc(className);
+});
+$(document).on('click', 'div#item-pkm-next', function(){
+  var className = $(this).attr('data-classname');
   openItemDesc(className);
 });
 /* Close Item Description */
