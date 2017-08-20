@@ -405,7 +405,12 @@ a.tofilter {
 .pokedex-img {
 	height: 30px;
 }
-
+.pkmimagegroups {
+	width: 204px;
+}
+.pkmimagegroups > div {
+	margin-bottom: 0;
+}
 
 .typebadge {
     border-radius: 3px;
@@ -453,8 +458,8 @@ a.tofilter {
 .rankBad { color : #c0392b; }
 
 .typemodifiers {
-	padding-left: 5px;
-	padding-right: 5px;
+	padding-left: 0;
+	padding-right: 0;
 }
 .typemodifiers .btn-group {
 	margin-bottom:3px;

@@ -1037,44 +1037,44 @@ function formatProperty(propertyType, propertyData, orientation, parentname) {
   /* property specific formattage */
 
   /* Characteristics */
-  if (propertyType == 'typemodstrong' && propertyData) {
-    for (defpoke in TYPES[propertyData.type1]) {
-      if (TYPES[propertyData.type1][defpoke] > 1) {
-        tHtml += '<div class="btn-group" role="group" aria-label="poketypemod">';
-        tHtml += '<button id="item-type" type="button" class="btn btn-default btn-xs disabled type'+defpoke+'">'+defpoke+'</button>';
-        tHtml += '<button type="button" class="btn btn-default btn-xs disabled">x'+TYPES[propertyData.type1][defpoke]+'</button>';
-        tHtml += '</div>';
+  if (propertyType == 'dmgdealt' && propertyData) {
+    var thisTypes = propertyData.type2.length > 0 ? [propertyData.type1,propertyData.type2] : [propertyData.type1];
+    var atkMod = dmgDealt.hasOwnProperty(thisTypes.join("-")) ? thisTypes.join("-") : dmgDealt.hasOwnProperty(thisTypes[1]+"-"+thisTypes[0]) ? thisTypes[1]+"-"+thisTypes[0] : null;
+    if (atkMod != null) {
+      for (ModifierValue in dmgDealt[atkMod]) {
+        tHtml += '<h6>'+ModifierValue+'</h6>';
+        for (defMod in dmgDealt[atkMod][ModifierValue]) {
+          var defTypes = dmgDealt[atkMod][ModifierValue][defMod].split("-");
+          tHtml += '<div class="btn-group" role="group" aria-label="poketypemod">';
+          tHtml += '<button id="item-type" type="button" class="btn btn-default btn-xs disabled type'+defTypes[0]+'">'+defTypes[0]+'</button>';
+          if (defTypes.length > 1) {
+            tHtml += '<button id="item-type" type="button" class="btn btn-default btn-xs disabled type'+defTypes[1]+'">'+defTypes[1]+'</button>';
+          }
+          tHtml += '</div>';
+        }
       }
+    } else {
+      console.warn("Pokemon Types NOT FOUND", thisTypes);
     }
   }
-  if (propertyType == 'typemodweak' && propertyData) {
-    for (defpoke in TYPES[propertyData.type1]) {
-      if (TYPES[propertyData.type1][defpoke] < 1) {
-        tHtml += '<div class="btn-group" role="group" aria-label="poketypemod">';
-        tHtml += '<button id="item-type" type="button" class="btn btn-default btn-xs disabled type'+defpoke+'">'+defpoke+'</button>';
-        tHtml += '<button type="button" class="btn btn-default btn-xs disabled">x'+TYPES[propertyData.type1][defpoke]+'</button>';
-        tHtml += '</div>';
+  if (propertyType == 'dmgtaken' && propertyData) {
+    var thisTypes = propertyData.type2.length > 0 ? [propertyData.type1,propertyData.type2] : [propertyData.type1];
+    var atkMod = dmgTaken.hasOwnProperty(thisTypes.join("-")) ? thisTypes.join("-") : dmgTaken.hasOwnProperty(thisTypes[1]+"-"+thisTypes[0]) ? thisTypes[1]+"-"+thisTypes[0] : null;
+    if (atkMod != null) {
+      for (ModifierValue in dmgTaken[atkMod]) {
+        tHtml += '<h6>'+ModifierValue+'</h6>';
+        for (defMod in dmgTaken[atkMod][ModifierValue]) {
+          var defTypes = dmgTaken[atkMod][ModifierValue][defMod].split("-");
+          tHtml += '<div class="btn-group" role="group" aria-label="poketypemod">';
+          tHtml += '<button id="item-type" type="button" class="btn btn-default btn-xs disabled type'+defTypes[0]+'">'+defTypes[0]+'</button>';
+          if (defTypes.length > 1) {
+            tHtml += '<button id="item-type" type="button" class="btn btn-default btn-xs disabled type'+defTypes[1]+'">'+defTypes[1]+'</button>';
+          }
+          tHtml += '</div>';
+        }
       }
-    }
-  }
-  if (propertyType == 'deftypemodstrong' && propertyData) {
-    for (defpoke in TYPES) {
-      if (TYPES[defpoke][propertyData.type1] > 1) {
-        tHtml += '<div class="btn-group" role="group" aria-label="poketypemod">';
-        tHtml += '<button id="item-type" type="button" class="btn btn-default btn-xs disabled type'+defpoke+'">'+defpoke+'</button>';
-        tHtml += '<button type="button" class="btn btn-default btn-xs disabled">x'+TYPES[defpoke][propertyData.type1]+'</button>';
-        tHtml += '</div>';
-      }
-    }
-  }
-  if (propertyType == 'deftypemodweak' && propertyData) {
-    for (defpoke in TYPES) {
-      if (TYPES[defpoke][propertyData.type1] < 1) {
-        tHtml += '<div class="btn-group" role="group" aria-label="poketypemod">';
-        tHtml += '<button id="item-type" type="button" class="btn btn-default btn-xs disabled type'+defpoke+'">'+defpoke+'</button>';
-        tHtml += '<button type="button" class="btn btn-default btn-xs disabled">x'+TYPES[defpoke][propertyData.type1]+'</button>';
-        tHtml += '</div>';
-      }
+    } else {
+      console.warn("Pokemon Types NOT FOUND", thisTypes);
     }
   }
 
@@ -1829,6 +1829,14 @@ function printDescription(className) {
       $('#item-type').addClass('btn btn-default disabled type'+descData.type1);
       $('#item-type').html(descData.type1);
 
+      $('#item-type2').removeClass();
+      if (descData.type2.length > 0) {
+        $('#item-type2').addClass('btn btn-default disabled type'+descData.type2);
+        $('#item-type2').html(descData.type2);
+      } else {
+        $('#item-type2').addClass('hide');
+      }
+
       /* Pokemon Catch Rate */
       $('.catchrateballs').removeClass('hide');
       if (descData.hasOwnProperty('routes')) {
@@ -1846,10 +1854,8 @@ function printDescription(className) {
 
       /* Pokemon Type Modifier */
       $('#item-typemod').html(descData.type1);
-      $('#item-typemod-strong').html(formatProperty('typemodstrong', descData));
-      $('#item-typemod-weak').html(formatProperty('typemodweak', descData));
-      $('#item-def-typemod-strong').html(formatProperty('deftypemodstrong', descData));
-      $('#item-def-typemod-weak').html(formatProperty('deftypemodweak', descData));
+      $('#item-typemod-strong').html(formatProperty('dmgdealt', descData));
+      $('#item-def-typemod-strong').html(formatProperty('dmgtaken', descData));
 
       /* Pokemon Stats */
 

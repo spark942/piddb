@@ -134,6 +134,7 @@
 									<div class="btn-group" role="group" aria-label="poketype">
 										<button type="button" class="btn btn-default disabled">Type</button>
 										<button id="item-type" type="button" class="btn btn-default disabled">{type}</button>
+										<button id="item-type2" type="button" class="btn btn-default disabled">{type2}</button>
 									</div>
 
 									<div class="btn-group catchrateballs" role="group" aria-label="poketype">
@@ -143,46 +144,30 @@
 									</div>
 								</div>
 							</div>
-							<div class="row">
-								<div class="col-sm-12 col-md-8 col-lg-6">
-									<div class="imgplaceholder thumbnail">
-										<img id="item-image" src="..." alt="Normal" class="item-thumbnail">
-										<div class="caption"><kbd>Normal Front</kbd></div>
-									</div>
-									<div class="imgplaceholder thumbnail">
-										<img id="item-image2" src="..." alt="Normal Back" class="item-thumbnail">
-										<div class="caption"><kbd>Normal Back</kbd></div>
-									</div>
-									<div class="imgplaceholder thumbnail">
-										<img id="item-simage" src="..." alt="Shiny" class="item-thumbnail">
-										<div class="caption"><kbd>Shiny Front</kbd></div>
-									</div>
-									<div class="imgplaceholder thumbnail">
-										<img id="item-simage2" src="..." alt="Shiny Back" class="item-thumbnail">
-										<div class="caption"><kbd>Shiny Back</kbd></div>
-									</div>
-								</div>
-								<div class="col-sm-12 col-md-4 col-lg-6">
-									<!-- <h4><span id="item-typemod"></span> Type Modifier</h4> -->
-									<div class="row">
-										<div class="col-sm-12 col-md-6 typemodifiers">
-											<h5>Attack Dealt</h5>
-											<div id="item-typemod-strong"></div>
-											<div id="item-typemod-weak"></div>
-										</div>
-										<div class="col-sm-12 col-md-6 typemodifiers">
-											<h5>Attack Taken</h5>
-											
-											<div id="item-def-typemod-strong"></div>
-											<div id="item-def-typemod-weak"></div>
-										</div>
-									</div>
-								</div>
-							</div>
 						</section>
 					</div>
 					<div class="row">
 						<section id="item-caracteristics" class="item-desc-content col-sm-12 col-md-6">
+							<div class="btn-group pkmimagegroups" role="group" aria-label="Normal Images">
+								<div class="imgplaceholder thumbnail">
+									<img id="item-image" src="..." alt="Normal" class="item-thumbnail">
+									<div class="caption"><kbd>Normal Front</kbd></div>
+								</div>
+								<div class="imgplaceholder thumbnail">
+									<img id="item-image2" src="..." alt="Normal Back" class="item-thumbnail">
+									<div class="caption"><kbd>Normal Back</kbd></div>
+								</div>
+							</div>
+							<div class="btn-group pkmimagegroups" role="group" aria-label="Normal Images">
+								<div class="imgplaceholder thumbnail">
+									<img id="item-simage" src="..." alt="Shiny" class="item-thumbnail">
+									<div class="caption"><kbd>Shiny Front</kbd></div>
+								</div>
+								<div class="imgplaceholder thumbnail">
+									<img id="item-simage2" src="..." alt="Shiny Back" class="item-thumbnail">
+									<div class="caption"><kbd>Shiny Back</kbd></div>
+								</div>
+							</div>
 							<h4>Characteristics</h4>
 							<table class="table table-striped table-condensed">
 								<thead>
@@ -218,6 +203,18 @@
 							</table>
 						</section>
 						<section id="item-requirements" class="item-desc-content col-sm-12 col-md-6">
+							<h4>Damage Modifiers</h4>
+							<div class="col-sm-12 col-md-12 typemodifiers">
+								<h5>Damage Dealt to</h5>
+								<div id="item-typemod-strong"></div>
+								<div id="item-typemod-weak"></div>
+							</div>
+							<div class="col-sm-12 col-md-12 typemodifiers">
+								<h5>Damage Taken from</h5>
+								
+								<div id="item-def-typemod-strong"></div>
+								<div id="item-def-typemod-weak"></div>
+							</div>
 							<h4>Graphs</h4>
 							<p>WIP</p>
 							<h4>Name in other languages</h4>
@@ -427,10 +424,13 @@
 		<script src="https://richardpaulastley.github.io/evolutions.js"></script>
 		<script src="https://richardpaulastley.github.io/routes.js"></script>
 		<script src="https://richardpaulastley.github.io/typeModifiers.js"></script>
+		<script src="typeModifiersDealt.js"></script>
+		<script src="typeModifiersTaken.js"></script>
 		<script src="locale_pkms.js"></script>
+
 		<script src="script.js?v=rg5es46gs5r"></script>
 		<!-- ONLY to recalculate type modifiers -->
-		<script src="calculateAllTypeModifiers.js?v=rg5es46gs5r"></script>
+		<!-- <script src="calculateAllTypeModifiers.js?v=rg5es46gs5r"></script> -->
 
 		<script>
 			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
