@@ -567,6 +567,9 @@ $(document).ready(function() {
         "aTargets": [2],
         "mData": "type1",
         "mRender": function ( data, type, full ) {
+          if (full.type2.length > 0) {
+            return '<span class="typebadge type'+data+'">'+data+'</span> <span class="typebadge type'+full.type2+'">'+full.type2+'</span>';
+          }
           return '<span class="typebadge type'+data+'">'+data+'</span>';
         }
       },
@@ -700,7 +703,7 @@ $(document).ready(function() {
   yadcf.init(oTablePD, [/*
     {column_number : 0 },*/
     {column_number : 1, filter_type: 'select', filter_default_label: 'All Pokémons', filter_reset_button_text: false},
-    {column_number : 2, filter_type: 'select', filter_default_label: 'All Types', filter_reset_button_text: false},
+    {column_number : 2, filter_type: 'select', text_data_delimiter: ",", filter_default_label: 'All Types', filter_reset_button_text: false},
     {column_number : 10, filter_type: 'select', filter_default_label: 'Pokémons', filter_reset_button_text: false},
     {column_number : 11, text_data_delimiter: ",", filter_default_label: 'All Regions', filter_reset_button_text: false}
       ], {filters_position: "footer", filters_tr_index: 1});
@@ -882,6 +885,14 @@ $(document).ready(function() {
     updateURL('searchpdex', $(this).val());
     oTablePD.search($(this).val()).draw();
   });
+  $(document).on('click', 'div.grouptypemod', function() { 
+    var thisTypes = $(this).attr('data-searchtypes');
+    $( "#item-description" ).hide( "slow" );
+    //$('#searchpdexlist').val(thisTypes);
+    $("#searchpdexlist").val(thisTypes);
+    oTablePD.search(thisTypes).draw();
+    $( "#menupokedex" ).trigger( "click" );
+  });
 
   var curTable = 'pokedex';
 
@@ -1046,7 +1057,8 @@ function formatProperty(propertyType, propertyData, orientation, parentname) {
         tHtml += '<h6>'+ModifierValue+'</h6>';
         for (defMod in dmgDealt[atkMod][ModifierValue]) {
           var defTypes = dmgDealt[atkMod][ModifierValue][defMod].split("-");
-          tHtml += '<div class="btn-group" role="group" aria-label="poketypemod">';
+          var defTypesSearch = dmgDealt[atkMod][ModifierValue][defMod].replace("-", " ");
+          tHtml += '<div class="btn-group grouptypemod" role="group" aria-label="poketypemod" data-searchtypes="'+defTypesSearch+'">';
           tHtml += '<button id="item-type" type="button" class="btn btn-default btn-xs disabled type'+defTypes[0]+'">'+defTypes[0]+'</button>';
           if (defTypes.length > 1) {
             tHtml += '<button id="item-type" type="button" class="btn btn-default btn-xs disabled type'+defTypes[1]+'">'+defTypes[1]+'</button>';

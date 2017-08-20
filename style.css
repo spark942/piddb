@@ -467,7 +467,6 @@ a.tofilter {
 }
 .typemodifiers > div > div {
 	padding: 3px;
-	margin-top: 3px;
 	margin-bottom: 3px;
 	border-radius: 3px;
 }
@@ -495,8 +494,22 @@ a.tofilter {
 	background-color: rgba(192, 57, 43,0.5);
 }
 .typemodifiers h6 {
+	margin-top: 3px;
 	margin-bottom: 0;
 	font-weight: bold;
+}
+.typemodifiers button {
+	text-shadow: none;
+}
+.typemodifiers button:hover,
+.typemodifiers button:active {
+	color: white;
+}
+.grouptypemod {
+	cursor: pointer !important;
+}
+.grouptypemod button {
+	cursor: inherit !important;
 }
 .hide {
 	display: none;
