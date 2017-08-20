@@ -1083,7 +1083,8 @@ function formatProperty(propertyType, propertyData, orientation, parentname) {
         tHtml += '<h6>'+ModifierValue+'</h6>';
         for (defMod in dmgTaken[atkMod][ModifierValue]) {
           var defTypes = dmgTaken[atkMod][ModifierValue][defMod].split("-");
-          tHtml += '<div class="btn-group" role="group" aria-label="poketypemod">';
+          var defTypesSearch = dmgTaken[atkMod][ModifierValue][defMod].replace("-", " ");
+          tHtml += '<div class="btn-group grouptypemod" role="group" aria-label="poketypemod" data-searchtypes="'+defTypesSearch+'">';
           tHtml += '<button id="item-type" type="button" class="btn btn-default btn-xs disabled type'+defTypes[0]+'">'+defTypes[0]+'</button>';
           if (defTypes.length > 1) {
             tHtml += '<button id="item-type" type="button" class="btn btn-default btn-xs disabled type'+defTypes[1]+'">'+defTypes[1]+'</button>';
