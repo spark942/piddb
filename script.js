@@ -1756,7 +1756,11 @@ function formatProperty(propertyType, propertyData, orientation, parentname) {
         tHtml += cellb+'<a class="item-details-link" href="#'+propertyData[poke].className+'">'+propertyData[poke].name+'</a>'+cella;
       else
         tHtml += cellb+propertyData[poke].name+cella;
-      tHtml += cellb+'<span class="typebadge type'+propertyData[poke].type1+'">'+propertyData[poke].type1+'</span>'+cella;
+      tHtml += cellb+'<span class="typebadge type'+propertyData[poke].type1+'">'+propertyData[poke].type1+'</span>';
+      if (propertyData[poke].type2.length > 0) {
+        tHtml += ' <span class="typebadge type'+propertyData[poke].type2+'">'+propertyData[poke].type2+'</span>';;
+      }
+      tHtml += cella;
       if (propertyData[poke].hasOwnProperty('routes'))
         tHtml += cellb+(propertyData[poke].catch/3).toLocaleString('en-US', {
                 minimumFractionDigits: 0,
