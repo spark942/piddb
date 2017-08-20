@@ -1042,6 +1042,7 @@ function formatProperty(propertyType, propertyData, orientation, parentname) {
     var atkMod = dmgDealt.hasOwnProperty(thisTypes.join("-")) ? thisTypes.join("-") : dmgDealt.hasOwnProperty(thisTypes[1]+"-"+thisTypes[0]) ? thisTypes[1]+"-"+thisTypes[0] : null;
     if (atkMod != null) {
       for (ModifierValue in dmgDealt[atkMod]) {
+        tHtml += '<div data-modifier-dealt="'+ModifierValue+'">';
         tHtml += '<h6>'+ModifierValue+'</h6>';
         for (defMod in dmgDealt[atkMod][ModifierValue]) {
           var defTypes = dmgDealt[atkMod][ModifierValue][defMod].split("-");
@@ -1052,6 +1053,7 @@ function formatProperty(propertyType, propertyData, orientation, parentname) {
           }
           tHtml += '</div>';
         }
+        tHtml += '</div>';
       }
     } else {
       console.warn("Pokemon Types NOT FOUND", thisTypes);
@@ -1062,6 +1064,7 @@ function formatProperty(propertyType, propertyData, orientation, parentname) {
     var atkMod = dmgTaken.hasOwnProperty(thisTypes.join("-")) ? thisTypes.join("-") : dmgTaken.hasOwnProperty(thisTypes[1]+"-"+thisTypes[0]) ? thisTypes[1]+"-"+thisTypes[0] : null;
     if (atkMod != null) {
       for (ModifierValue in dmgTaken[atkMod]) {
+        tHtml += '<div data-modifier-taken="'+ModifierValue+'">';
         tHtml += '<h6>'+ModifierValue+'</h6>';
         for (defMod in dmgTaken[atkMod][ModifierValue]) {
           var defTypes = dmgTaken[atkMod][ModifierValue][defMod].split("-");
@@ -1072,6 +1075,7 @@ function formatProperty(propertyType, propertyData, orientation, parentname) {
           }
           tHtml += '</div>';
         }
+        tHtml += '</div>';
       }
     } else {
       console.warn("Pokemon Types NOT FOUND", thisTypes);

@@ -465,7 +465,39 @@ a.tofilter {
 	margin-bottom:3px;
 	margin-right:3px;
 }
-
+.typemodifiers > div > div {
+	padding: 3px;
+	margin-top: 3px;
+	margin-bottom: 3px;
+	border-radius: 3px;
+}
+.typemodifiers div[data-modifier-taken="x0.125"] {
+	background-color: rgba(155, 89, 182,0.5);
+	background-
+}
+.typemodifiers div[data-modifier-dealt="x4"],
+.typemodifiers div[data-modifier-taken="x0.25"] {
+	background-color: rgba(52, 152, 219,0.5);
+}
+.typemodifiers div[data-modifier-dealt="x2"],
+.typemodifiers div[data-modifier-taken="x0.5"] {
+	background-color: rgba(46, 204, 113,0.5);
+}
+.typemodifiers div[data-modifier-dealt="x0.5"] {
+	background-color: rgba(243, 156, 18,0.5);
+}
+.typemodifiers div[data-modifier-dealt="x0.25"],
+.typemodifiers div[data-modifier-taken="x2"] {
+	background-color: rgba(211, 84, 0,0.5);
+}
+.typemodifiers div[data-modifier-dealt="x0.125"],
+.typemodifiers div[data-modifier-taken="x4"] {
+	background-color: rgba(192, 57, 43,0.5);
+}
+.typemodifiers h6 {
+	margin-bottom: 0;
+	font-weight: bold;
+}
 .hide {
 	display: none;
 }
