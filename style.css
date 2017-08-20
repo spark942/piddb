@@ -260,6 +260,10 @@ a.tofilter {
 #item-description {
 	display: none;
 	margin-bottom: 20px;
+	/*overflow-y: scroll;*/
+}
+#item-description .row:nth-child(2) {
+	height: calc(100vh - 136px);
 	overflow-y: scroll;
 }
 #item-description .disabled {
