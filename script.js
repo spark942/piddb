@@ -1798,7 +1798,7 @@ function formatProperty(propertyType, propertyData, orientation, parentname) {
         };
       }
     } else {
-      tHtml += '<tr><td colspan="4">'+propertyData.name+' can\'t be captured. See other forms</td></tr>';
+      tHtml += '<tr><td colspan="5">'+propertyData.name+' can\'t be captured. See other forms</td></tr>';
     }
     
   }
