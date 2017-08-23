@@ -192,7 +192,11 @@ var formatPokemonCity = function(name, type, region, routename, min, max, catchr
   Pokemons[name].routes[region].push({
     routename: routename,
     lvmin    : min,
-    lvmax    : max
+    lvmax    : max,
+    expmin   : formatNumber((Pokemons[name].bexp / 16) + (min * 3),0,2),
+    expmax   : formatNumber((Pokemons[name].bexp / 16) + (max * 3),0,2),
+    expteammin   : formatNumber((Pokemons[name].bexp / 100) + (min / 10),0,2),
+    expteammax   : formatNumber((Pokemons[name].bexp / 100) + (max / 10),0,2),
   });
 
 
@@ -382,16 +386,16 @@ $(document).ready(function() {
         name: "Max Level", data: "lvmax", className: 'num',
       },
       { /* 7 (Col 6) */
-        name: "Min Exp", data: "expmin", className: 'num', render: $.fn.dataTable.render.number( ',', '.', 0, '', 'EXP')
+        name: "Min Exp", data: "expmin", className: 'num', render: $.fn.dataTable.render.number( ',', '.', 2, '', 'EXP')
       },
       { /* 8 (Col 7) */
-        name: "Max Exp", data: "expmax", className: 'num', render: $.fn.dataTable.render.number( ',', '.', 0, '', 'EXP')
+        name: "Max Exp", data: "expmax", className: 'num', render: $.fn.dataTable.render.number( ',', '.', 2, '', 'EXP')
       },
       { /* 9 (Col 8) */
-        name: "Min Team Exp", data: "expteammin", className: 'num', render: $.fn.dataTable.render.number( ',', '.', 0, '', 'EXP')
+        name: "Min Team Exp", data: "expteammin", className: 'num', render: $.fn.dataTable.render.number( ',', '.', 2, '', 'EXP')
       },
       { /* 10 (Col 9) */
-        name: "Max Team Exp", data: "expteammax", className: 'num', render: $.fn.dataTable.render.number( ',', '.', 0, '', 'EXP')
+        name: "Max Team Exp", data: "expteammax", className: 'num', render: $.fn.dataTable.render.number( ',', '.', 2, '', 'EXP')
       },
       { /* 11 (Col 9) */
         name: "Catch", data: "catch", className: 'num',
@@ -1788,6 +1792,8 @@ function formatProperty(propertyType, propertyData, orientation, parentname) {
           tHtml += cellb+'<a class="pokemonregion" href="#" data-pokemon="'+propertyData.name+'" data-region="'+region+'">'+region+'</a>'+cella;
           tHtml += cellb+'<a class="pokemonroute" href="#"  data-region="'+region+'" data-route="'+propertyData.routes[region][i].routename+'">'+propertyData.routes[region][i].routename+'</a>'+cella;
           tHtml += cellbnum+propertyData.routes[region][i].lvmin+' - '+propertyData.routes[region][i].lvmax+cella;
+          tHtml += cellbnum+propertyData.routes[region][i].expmin+' - '+propertyData.routes[region][i].expmax+cella;
+          tHtml += cellbnum+propertyData.routes[region][i].expteammin+' - '+propertyData.routes[region][i].expteammax+cella;
           tHtml += '</tr>';
         };
       }
