@@ -139,7 +139,7 @@ html,body { height: 100%; margin: 0px; padding: 0px; }
 }
 #cookiedex {
 	overflow-y: scroll;
-	max-height: calc(100vh - 490px);
+	max-height: calc(100vh - 530px);
 }
 #cookiedex,
 #cookiedex a {
@@ -575,4 +575,13 @@ a.tofilter {
 }
 #cookiedex .item-details-link:before {
 	margin-left: -64px;
+}
+#cookiedex .item-details-link[data-udex="3"],
+#cookiedex .item-details-link[data-udex="4"],
+#cookiedex .item-details-link[data-udex="5"],
+#cookiedex .item-details-link[data-udex="6"],
+#cookiedex .item-details-link[data-udex="7"],
+#cookiedex .item-details-link[data-udex="8"] {
+	width: calc(100% - 24px);
+	position: relative;
 }
