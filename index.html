@@ -103,6 +103,9 @@
 						<a href="#">Cookiedex</a>
 						<div id="cookiedex">Empty. Open a Poke Description</div>
 					</li>
+					<li id="datadex">
+						<a href="#" class="showtable" id="menudatadex">Load your data</a>
+					</li>
 					<li>
 						<a href="#">Data from latest version</a>
 					</li>
@@ -443,6 +446,16 @@
 									</tr>
 								</tfoot>
 							</table>
+						</div>
+						<div id="tc-datadex" class="col-lg-12 curtable poketable">
+							<div class="jumbotron" style="height: calc(100vh - 50px);overflow-y: auto;">
+								<h1 style="margin-top: 0;">Load your data here</h1>
+								<h4>Past your data and click on the button. An icon will appear next to the poke name if you have it</h4>
+								<img src="img/datadexample.png"><h6>#102 Shiny not in team anymore<br>#103 Shiny in team<br>#104 Normal in Team</h6>
+								<button id="loaddatapokedex">Load it!</button>
+								<br>
+								<textarea id="datapokedex" placeholder="DATA..." cols="100" rows="20"></textarea>
+							</div>
 						</div>
 					</div>
 				</div>

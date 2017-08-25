@@ -49,6 +49,8 @@ var PokemonPokedexRankingDpsPerType = [];
 
 var MapRoutes = [];
 
+var userPokedex = {};
+
 var formatPokemonArray = function() {
   for (pdt in POKEDEX) {
     var p_name   = POKEDEX[pdt].pokemon[0]["Pokemon"];
@@ -345,6 +347,49 @@ var filterableColumnNames = [
     "Type",
     "Region",
     "Route"];
+
+
+/* *********************** *
+ *  LOAD USERS POKEDEX
+ * *********************** */
+const checksum = function(s) {
+    var chk = 0x12345678;
+    var len = s.length;
+    for (var i = 0; i < len; i++) {
+        chk += (s.charCodeAt(i) * (i + 1));
+    }
+
+    return (chk & 0xffffffff).toString(16);
+};
+const loadFromString = function(saveData) {
+  saveData = atob(saveData)
+  saveData = saveData.split('|')
+  if (checksum(saveData[1]) === saveData[0]) {
+    try {
+      saveData = JSON.parse(saveData[1])
+    } catch (err) {
+      alert('Failed to parse save data, loading canceled!')
+      return;
+    }
+    userdatapokedex = saveData.pokedexData ? saveData.pokedexData : []
+    var formattedUserdex = {};
+    for (var i = 0; i < userdatapokedex.length; i++) {
+      formattedUserdex[userdatapokedex[i].name] = userdatapokedex[i].flag;
+    };
+    userPokedex = formattedUserdex;
+    $('#pokedex').DataTable()
+      .rows().invalidate('data')
+      .draw(false);
+    $('#pokemonspercity').DataTable()
+      .rows().invalidate('data')
+      .draw(false);
+    setCookiedex('');
+    alert("Loaded! "+ userdatapokedex.length +" Pokémons found in your pokedex");
+  } else {
+    alert('Invalid save data, loading canceled!')
+  }
+};
+
 $(document).ready(function() {
   /* *********************** *
    *  POKEMON PER CITY
@@ -407,7 +452,8 @@ $(document).ready(function() {
         "aTargets": [1],
         "mData": "name",
         "mRender": function ( data, type, full ) {
-          return '<a class="item-details-link" href="#'+full.className+'">'+data+'</a>';
+          var udex = userPokedex.hasOwnProperty(data) ? userPokedex[data] : "0";
+          return '<a class="item-details-link" href="#'+full.className+'" data-udex="'+udex+'">'+data+'</a>'
         }
       },
       {
@@ -567,7 +613,8 @@ $(document).ready(function() {
         "aTargets": [1],
         "mData": "name",
         "mRender": function ( data, type, full ) {
-          return '<a class="item-details-link" href="#'+full.className+'">'+data+'</a>'
+          var udex = userPokedex.hasOwnProperty(data) ? userPokedex[data] : "0";
+          return '<a class="item-details-link" href="#'+full.className+'" data-udex="'+udex+'">'+data+'</a>'
         }
       },
       {
@@ -998,6 +1045,13 @@ $(document).ready(function() {
     openItemDesc(className);
 
   setCookiedex('');
+
+  $(document).on('click', 'button#loaddatapokedex', function() { 
+    var thisData = $('textarea#datapokedex').val();
+
+    loadFromString(thisData);
+
+  });
 });
 
 function setCookiedex(pokemonclass) {
@@ -1032,7 +1086,8 @@ function displayCookiedex(cdex) {
   var thtml = '';
   for (var i = cdex.length - 1; i >= 0; i--) {
     if (cdex[i].length > 2) {
-      thtml += '<a class="item-details-link" href="#'+cdex[i]+'"><span class="typebadge type'+Pokemons[cdex[i].replace('_',' ')].type1+'">'+Pokemons[cdex[i].replace('_',' ')].type1+'</span> '+cdex[i].replace('_',' ')+'</a>';
+      var udex = userPokedex.hasOwnProperty(cdex[i].replace('_',' ')) ? userPokedex[cdex[i].replace('_',' ')] : "0";
+      thtml += '<a class="item-details-link" href="#'+cdex[i]+'" data-udex="'+udex+'"><span class="typebadge type'+Pokemons[cdex[i].replace('_',' ')].type1+'">'+Pokemons[cdex[i].replace('_',' ')].type1+'</span> '+cdex[i].replace('_',' ')+'</a>';
     }
   };
   $('#cookiedex').html(thtml);
@@ -1756,10 +1811,11 @@ function formatProperty(propertyType, propertyData, orientation, parentname) {
 
       tHtml += '<tr>';
       tHtml += cellb+(propertyData[poke].id.toString()).padStart(3, '0')+cella;
+      var udex = userPokedex.hasOwnProperty(propertyData[poke].name) ? userPokedex[propertyData[poke].name] : "0";
       if (parentname != propertyData[poke].name)
-        tHtml += cellb+'<a class="item-details-link" href="#'+propertyData[poke].className+'">'+propertyData[poke].name+'</a>'+cella;
+        tHtml += cellb+'<a class="item-details-link" data-udex="'+udex+'" href="#'+propertyData[poke].className+'">'+propertyData[poke].name+'</a>'+cella;
       else
-        tHtml += cellb+propertyData[poke].name+cella;
+        tHtml += cellb+'<span class="item-details-link" data-udex="'+udex+'">'+propertyData[poke].name+'</span>'+cella;
       tHtml += cellb+'<span class="typebadge type'+propertyData[poke].type1+'">'+propertyData[poke].type1+'</span>';
       if (propertyData[poke].type2.length > 0) {
         tHtml += ' <span class="typebadge type'+propertyData[poke].type2+'">'+propertyData[poke].type2+'</span>';;
@@ -1853,7 +1909,8 @@ function printDescription(className) {
       if (typeof PokemonPokedex[i-1] !== 'undefined') {
         var prevPKM = PokemonPokedex[i-1];
         $('#item-number-prev').html('#'+(prevPKM.id.toString()).padStart(3, '0'));
-        $('#item-name-prev').html(prevPKM.name);
+        var udexprev = userPokedex.hasOwnProperty(prevPKM.name) ? userPokedex[prevPKM.name] : "0";
+        $('#item-name-prev').html('<span class="item-details-link" data-udex="'+udexprev+'">'+prevPKM.name+'</span>');
         $('#item-pkm-prev').addClass('btn-group');
         $('#item-pkm-prev').attr('data-classname', prevPKM.className);
       } else {
@@ -1863,7 +1920,8 @@ function printDescription(className) {
       if (typeof PokemonPokedex[i+1] !== 'undefined') {
         var nextPKM = PokemonPokedex[i+1];
         $('#item-number-next').html('#'+(nextPKM.id.toString()).padStart(3, '0'));
-        $('#item-name-next').html(nextPKM.name);
+        var udexnext = userPokedex.hasOwnProperty(nextPKM.name) ? userPokedex[nextPKM.name] : "0";
+        $('#item-name-next').html('<span class="item-details-link" data-udex="'+udexnext+'">'+nextPKM.name+'</span>');
         $('#item-pkm-next').addClass('btn-group');
         $('#item-pkm-next').attr('data-classname', nextPKM.className);
       } else {
@@ -1875,7 +1933,8 @@ function printDescription(className) {
       $('#item-number').html('#'+(descData.id.toString()).padStart(3, '0'));
 
       var thisName = descData.name;
-      $('#item-name').html(thisName);
+      var udex = userPokedex.hasOwnProperty(thisName) ? userPokedex[thisName] : "0";
+      $('#item-name').html('<span class="item-details-link" data-udex="'+udex+'">'+thisName+'</span>');
 
       $('#item-type').removeClass();
       $('#item-type').addClass('btn btn-default disabled type'+descData.type1);
@@ -1986,5 +2045,5 @@ $(document).keyup(function(e) {
   }
 });
 
-
 formatPokemonFamily();
+

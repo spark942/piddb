@@ -531,3 +531,45 @@ a.tofilter {
 .hide {
 	display: none;
 }
+.item-details-link[data-udex="3"],
+.item-details-link[data-udex="4"],
+.item-details-link[data-udex="5"],
+.item-details-link[data-udex="6"],
+.item-details-link[data-udex="7"],
+.item-details-link[data-udex="8"] {
+	padding-left: 24px;
+	position: relative;
+}
+
+.item-details-link[data-udex="3"]:before,
+.item-details-link[data-udex="5"]:before {
+	content: url('img/pdexnormal.png');
+	padding-right: 2px;
+	position: absolute;
+	margin-top: -4px;
+	margin-left: -24px;
+	opacity: 0.35;
+}
+.item-details-link[data-udex="6"]:before {
+	content: url('img/pdexnormal.png');
+	padding-right: 2px;
+	position: absolute;
+	margin-top: -4px;
+	margin-left: -24px;
+}
+.item-details-link[data-udex="4"]:before,
+.item-details-link[data-udex="7"]:before {
+	content: url('img/pdexshiny.png');
+	padding-right: 2px;
+	position: absolute;
+	margin-top: -4px;
+	margin-left: -24px;
+	opacity: 0.35;
+}
+.item-details-link[data-udex="8"]:before {
+	content: url('img/pdexshiny.png');
+	padding-right: 2px;
+	position: absolute;
+	margin-top: -4px;
+	margin-left: -24px;
+}
