@@ -573,3 +573,6 @@ a.tofilter {
 	margin-top: -2px;
 	margin-left: -24px;
 }
+#cookiedex .item-details-link:before {
+	margin-left: -64px;
+}
