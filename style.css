@@ -546,7 +546,7 @@ a.tofilter {
 	content: url('img/pdexnormal.png');
 	padding-right: 2px;
 	position: absolute;
-	margin-top: -4px;
+	margin-top: -2px;
 	margin-left: -24px;
 	opacity: 0.35;
 }
@@ -554,7 +554,7 @@ a.tofilter {
 	content: url('img/pdexnormal.png');
 	padding-right: 2px;
 	position: absolute;
-	margin-top: -4px;
+	margin-top: -2px;
 	margin-left: -24px;
 }
 .item-details-link[data-udex="4"]:before,
@@ -562,7 +562,7 @@ a.tofilter {
 	content: url('img/pdexshiny.png');
 	padding-right: 2px;
 	position: absolute;
-	margin-top: -4px;
+	margin-top: -2px;
 	margin-left: -24px;
 	opacity: 0.35;
 }
@@ -570,6 +570,6 @@ a.tofilter {
 	content: url('img/pdexshiny.png');
 	padding-right: 2px;
 	position: absolute;
-	margin-top: -4px;
+	margin-top: -2px;
 	margin-left: -24px;
 }
