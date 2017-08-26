@@ -28,6 +28,8 @@ const formatNumber = (number, min, max) => {
   return number.toLocaleString('en-US', {minimumFractionDigits: min,maximumFractionDigits: max});
 }
 
+var loadingMessage = document.getElementById("loading-msg");
+
 var Pokemons = {};
 var PokemonPokedex = [];
 var PokemonFamily = [];
@@ -52,6 +54,7 @@ var MapRoutes = [];
 var userPokedex = {};
 
 var formatPokemonArray = function() {
+  loadingMessage.innerHTML += "<br>Searching Pokémons...";
   for (pdt in POKEDEX) {
     var p_name   = POKEDEX[pdt].pokemon[0]["Pokemon"];
     var p_catch  = POKEDEX[pdt].stats[0]["catch rate"];
@@ -133,6 +136,7 @@ var formatPokemonArray = function() {
 formatPokemonArray();
 
 var formatPokemonFamily = function() {
+  loadingMessage.innerHTML += "<br>Indexing Pokémon Forms...";
   for (poke in Pokemons) {
     var exists = false;
     for (var i = 0; i < PokemonFamily.length; i++) {
@@ -207,12 +211,14 @@ var formatPokemonCity = function(name, type, region, routename, min, max, catchr
 };
 
 var PokemonsToPokedex = function() {
+  loadingMessage.innerHTML += "<br>Loading Pokédex...";
   for (poke in Pokemons) {
     PokemonPokedex.push(Pokemons[poke]);
   }
 };
 
 var setPokemonRankings = function() {
+  loadingMessage.innerHTML += "<br>Create Pokémon Rankings...";
   PokemonPokedexRankingHp = sortByAttribute(PokemonPokedex, '-hplv100');
   PokemonPokedexRankingAtk = sortByAttribute(PokemonPokedex, '-atklv100');
   PokemonPokedexRankingDef = sortByAttribute(PokemonPokedex, '-deflv100');
@@ -241,6 +247,7 @@ var setPokemonRankings = function() {
 }
 
 var buildPokeByCityData = function() {
+  loadingMessage.innerHTML += "<br>Finding Routes...";
   for (region in ROUTES) {
     var pc_region = region;
 
@@ -263,6 +270,7 @@ var buildPokeByCityData = function() {
 buildPokeByCityData();
 
 var formatMapRoutes = function() {
+  loadingMessage.innerHTML += "<br>Creating the Pokémap...";
   for (region in ROUTES) {
     for (routename in ROUTES[region]) {
       var thisRoute = {
@@ -743,6 +751,7 @@ $(document).ready(function() {
       }*/
     ],
     initComplete: function(settings, json) {
+      loadingMessage.innerHTML += "<br>Rendering the Pokédex...";
       /* Show the table after everything is loaded*/
       $.fn.dataTable.tables( {visible: true, api: true} ).columns.adjust();
     }
@@ -886,6 +895,7 @@ $(document).ready(function() {
       },
     ],
     initComplete: function(settings, json) {
+      loadingMessage.innerHTML += "<br>Rendering the Pokémap...";
       /* Show the table after everything is loaded*/
       $.fn.dataTable.tables( {visible: true, api: true} ).columns.adjust();
       /* Show the table after everything is loaded*/
@@ -1894,6 +1904,7 @@ function printDescription(className) {
     if (className == PokemonPokedex[i].className) {
       console.log('found item', PokemonPokedex[i]);
       var descData = PokemonPokedex[i];
+      loadingMessage.innerHTML += "<br>Rendering "+descData.name+"'s Description...";
       var imgfsrc = descData.imgf.includes('http') ? descData.imgf : (meta.imgSource + descData.imgf);
       var imgbsrc = descData.imgb.includes('http') ? descData.imgb : (meta.imgSource + descData.imgb);
       var simgfsrc = descData.simgf.includes('http') ? descData.simgf : (meta.imgSource + descData.simgf);
